@@ -303,7 +303,6 @@
       border-color: var(--accent);
     }
 
-    /* Fluid contain-mode viewport that guarantees full bodies never get cut off */
     .pao-img-viewport {
       width: 100%;
       height: 290px;
@@ -397,7 +396,6 @@
       margin-top: 0.2rem;
     }
 
-    /* Prominent Mnemonic Synthesized Sentence Banner */
     .mnemonic-story-banner {
       width: 100%;
       background: #080d1a;
@@ -416,7 +414,6 @@
       color: var(--accent);
     }
 
-    /* Stopwatch and Card Competition Controls */
     .deck-timer-badge {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 1.15rem;
@@ -706,7 +703,6 @@
       font-weight: 750;
     }
 
-    /* Lava lamp floating canvas preview */
     #lava-canvas-preview {
       width: 80px;
       height: 120px;
@@ -1407,7 +1403,7 @@
       "10": { initials: "L.B.", person: "Lola Bunny", action: "spinning crossover-dribble with", object: "Tune Squad basketball", pq: "Lola Bunny", wiki_slug: "Lola_Bunny", aq: "basketball crossover dribble", oq: "Basketball" },
       "11": { initials: "A.A.", person: "Alastor Altruist", action: "broadcasting demonic static through", object: "vintage microphone staff", pq: "Hazbin Hotel", wiki_slug: "Hazbin_Hotel", aq: "radio broadcast static", oq: "Microphone" },
       "12": { initials: "A.B.", person: "Alec Baldwin", action: "bludgeoning with", object: "brass Oscars trophy", pq: "Alec Baldwin", wiki_slug: "Alec_Baldwin", aq: "smashing trophy", oq: "Academy Award" },
-      "13": { initials: "A.C.", person: "Al Capone", action: "spraying bullets from", object: "Tommy gun", pq: "Al Capone", wiki_slug: "Al_Capone", aq: "tommy gun shooting", oq: "Thompson submachine gun" },
+      "13": { initials: "A.C.", person: "Al Capone", action: "chugging and shattering", object: "bootleg whiskey bottle", pq: "Al Capone", wiki_slug: "Al_Capone", aq: "drinking whiskey chug", oq: "Whisky" },
       "14": { initials: "A.D.", person: "Albus Dumbledore", action: "conjuring fiery storm with", object: "Elder Wand", pq: "Albus Dumbledore", wiki_slug: "Albus_Dumbledore", aq: "fire wand magic", oq: "Wand" },
       "15": { initials: "A.E.", person: "Albert Einstein", action: "scratching formulas onto", object: "slate chalkboard", pq: "Albert Einstein", wiki_slug: "Albert_Einstein", aq: "writing math chalk", oq: "Blackboard" },
       "16": { initials: "A.S.", person: "Arnold Schwarzenegger", action: "bench-pressing heavy", object: "500lb barbell", pq: "Arnold Schwarzenegger", wiki_slug: "Arnold_Schwarzenegger", aq: "bench press bodybuilding", oq: "Barbell" },
@@ -1508,8 +1504,8 @@
     }
 
     function initDeck() {
-      const CURRENT_VERSION = "pao_deck_v20";
-      const stored = localStorage.getItem(CURRENT_VERSION) || localStorage.getItem("pao_deck_v19");
+      const CURRENT_VERSION = "pao_deck_v21";
+      const stored = localStorage.getItem(CURRENT_VERSION) || localStorage.getItem("pao_deck_v20");
       if (stored) {
         try {
           deck = JSON.parse(stored);
@@ -1525,6 +1521,14 @@
         if (!deck[k]) {
           deck[k] = JSON.parse(JSON.stringify(DEFAULT_MASTER_DECK[k]));
         } else {
+          // If the action or object has been updated, clear stale media slots so new visuals load cleanly
+          if (deck[k].action !== DEFAULT_MASTER_DECK[k].action) {
+            delete deck[k].a_gif;
+            delete deck[k].a_pic;
+          }
+          if (deck[k].object !== DEFAULT_MASTER_DECK[k].object) {
+            delete deck[k].o_img;
+          }
           deck[k].person = DEFAULT_MASTER_DECK[k].person;
           deck[k].action = DEFAULT_MASTER_DECK[k].action;
           deck[k].object = DEFAULT_MASTER_DECK[k].object;
@@ -1542,7 +1546,7 @@
     }
 
     function saveDeck() {
-      localStorage.setItem("pao_deck_v20", JSON.stringify(deck));
+      localStorage.setItem("pao_deck_v21", JSON.stringify(deck));
     }
 
     let useLavaRng = localStorage.getItem("pao_use_lava_rng") === "true";
