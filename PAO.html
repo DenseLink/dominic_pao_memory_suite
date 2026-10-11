@@ -1,0 +1,3409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dominic PAO Memory Suite</title>
+  <style>
+    :root {
+      --bg: #070b14;
+      --surface: #0f172a;
+      --surface-hover: #1e293b;
+      --border: #334155;
+      --border-focus: #38bdf8;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --person-color: #a78bfa;
+      --action-color: #fbbf24;
+      --object-color: #34d399;
+      --danger: #f87171;
+      --success: #4ade80;
+      --lava-glow: rgba(249, 115, 22, 0.4);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.25rem 0.75rem 3rem 0.75rem;
+      overflow-x: hidden;
+    }
+
+    header {
+      width: 100%;
+      max-width: 1140px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      font-size: 2rem;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand h1 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #f8fafc 40%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn, button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .btn:hover, button:hover {
+      background: var(--surface-hover);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #080d1a;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: #7dd3fc;
+      border-color: #7dd3fc;
+      color: #080d1a;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    .btn-lava {
+      background: linear-gradient(135deg, #ea580c, #f97316);
+      border-color: #fb923c;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 0 12px var(--lava-glow);
+    }
+
+    .btn-lava:hover {
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(249, 115, 22, 0.6);
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border-radius: var(--radius-sm);
+    }
+
+    .btn-pass {
+      background: rgba(74, 222, 128, 0.15);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .btn-pass:hover {
+      background: var(--success);
+      color: #052e16;
+    }
+
+    .btn-fail {
+      background: rgba(248, 113, 113, 0.15);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .btn-fail:hover {
+      background: var(--danger);
+      color: #450a0a;
+    }
+
+    nav.tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      width: 100%;
+      max-width: 1140px;
+      margin-bottom: 1.5rem;
+    }
+
+    nav.tab-bar button {
+      font-size: 0.78rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: var(--radius-md);
+      background: #0b1120;
+    }
+
+    nav.tab-bar button.active {
+      background: var(--accent);
+      color: #070b14;
+      border-color: var(--accent);
+      font-weight: 750;
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+
+    main {
+      width: 100%;
+      max-width: 1140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .panel {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.2s ease forwards;
+    }
+
+    .panel.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-shell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      width: 100%;
+      box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      position: relative;
+    }
+
+    .pao-trio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.25rem 0;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .pao-trio-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pao-column {
+      background: #080d1a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .pao-column.col-p { border-top: 4px solid var(--person-color); }
+    .pao-column.col-a { border-top: 4px solid var(--action-color); }
+    .pao-column.col-o { border-top: 4px solid var(--object-color); }
+
+    .pao-badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      background: rgba(15, 23, 42, 0.75);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+    }
+
+    .pao-pill {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      color: #fff;
+    }
+
+    .pao-pill.pill-p { background: var(--person-color); }
+    .pao-pill.pill-a { background: var(--action-color); color: #080d1a; }
+    .pao-pill.pill-o { background: var(--object-color); color: #080d1a; }
+
+    .media-indicator-tag {
+      font-size: 0.68rem;
+      font-weight: 750;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .media-indicator-tag:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Fluid contain-mode viewport that guarantees full bodies never get cut off */
+    .pao-img-viewport {
+      width: 100%;
+      height: 290px;
+      background: radial-gradient(circle at center, #131b2e 0%, #060912 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .pao-img-viewport img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 6px;
+      transition: transform 0.25s ease;
+    }
+
+    .pao-img-viewport:hover img {
+      transform: scale(1.025);
+    }
+
+    .viewport-overlay-actions {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      display: flex;
+      gap: 0.35rem;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 5;
+    }
+
+    .pao-img-viewport:hover .viewport-overlay-actions {
+      opacity: 1;
+    }
+
+    .overlay-btn {
+      background: rgba(8, 13, 26, 0.9);
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.72rem;
+      padding: 0.3rem 0.55rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .overlay-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .placeholder-art {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      padding: 1rem;
+    }
+
+    .placeholder-art .glyph {
+      font-size: 2.75rem;
+      opacity: 0.6;
+    }
+
+    .pao-info-box {
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 75px;
+      text-align: left;
+    }
+
+    .pao-title {
+      font-size: 1.05rem;
+      font-weight: 750;
+      color: var(--text);
+      line-height: 1.25;
+    }
+
+    .pao-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Prominent Mnemonic Synthesized Sentence Banner */
+    .mnemonic-story-banner {
+      width: 100%;
+      background: #080d1a;
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      font-size: 1.15rem;
+      line-height: 1.5;
+      text-align: left;
+      margin: 1rem 0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+
+    .mnemonic-story-banner strong {
+      color: var(--accent);
+    }
+
+    /* Stopwatch and Card Competition Controls */
+    .deck-timer-badge {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #38bdf8;
+      background: #080d1a;
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .card-ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      margin-top: 0.75rem;
+    }
+    .card-ref-table th, .card-ref-table td {
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.5rem;
+      text-align: left;
+    }
+    .card-ref-table th {
+      background: #080d1a;
+      color: var(--accent);
+    }
+
+    .deck-hero-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background: #080d1a;
+      border: 1px solid var(--border);
+      padding: 0.9rem 1.25rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.25rem;
+      width: 100%;
+    }
+
+    .cards-triad-row {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1.25rem 0;
+      flex-wrap: wrap;
+    }
+
+    .playing-card {
+      width: 130px;
+      height: 190px;
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1.5px solid #cbd5e1;
+      box-shadow: 0 10px 25px -4px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0.6rem;
+      user-select: none;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .playing-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.8);
+    }
+
+    .playing-card.card-red {
+      color: #dc2626;
+    }
+
+    .playing-card.card-black {
+      color: #0f172a;
+    }
+
+    .card-corner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+    }
+
+    .card-corner .val {
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .card-corner .suit {
+      font-size: 1.2rem;
+    }
+
+    .card-center-suit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3.5rem;
+      opacity: 0.92;
+      pointer-events: none;
+    }
+
+    .card-corner.bottom-corner {
+      align-self: flex-end;
+      transform: rotate(180deg);
+    }
+
+    .card-mapping-tag {
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+
+    .table-viewport {
+      width: 100%;
+      max-height: 600px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-top: 1rem;
+    }
+
+    table.registry-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    table.registry-table th {
+      background: #080d1a;
+      color: var(--accent);
+      font-weight: 700;
+      padding: 0.75rem 0.8rem;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 2px solid var(--border);
+    }
+
+    table.registry-table td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    table.registry-table tr:hover td {
+      background: rgba(56, 189, 248, 0.04);
+    }
+
+    .reg-cell-flex {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .reg-mini-thumb {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 7px;
+      background: #060912;
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .reg-mini-thumb:hover {
+      border-color: var(--accent);
+    }
+
+    .reg-mini-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .reg-thumb-tag {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      font-size: 0.52rem;
+      font-weight: 800;
+      background: rgba(9, 14, 26, 0.92);
+      padding: 0.05rem 0.25rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      pointer-events: none;
+    }
+
+    .reg-btn-mini {
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.45rem;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      white-space: nowrap;
+    }
+
+    .reg-btn-mini:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--surface-hover);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 150;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #0b1120;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      width: 100%;
+      max-width: 760px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .source-tab-row {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .source-tab-btn {
+      background: #080d1a;
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      border-radius: 5px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .source-tab-btn.active {
+      background: var(--accent);
+      color: #080d1a;
+      border-color: var(--accent);
+      font-weight: 750;
+    }
+
+    /* Lava lamp floating canvas preview */
+    #lava-canvas-preview {
+      width: 80px;
+      height: 120px;
+      border-radius: 20px;
+      border: 2px solid #f97316;
+      box-shadow: 0 0 15px var(--lava-glow);
+      background: #180903;
+    }
+
+    input[type="text"], input[type="number"], textarea, select {
+      background: #080d1a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .badge-stat {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: #090e1a;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0b1329;
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 0.65rem 1.4rem;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 20px var(--accent-glow);
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 300;
+      pointer-events: none;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .spinner-sm {
+      width: 22px;
+      height: 22px;
+      border: 2.5px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <h1>Dominic PAO Memory Suite</h1>
+        <p>00–99 System &bull; 1–1000 Deck Card Memorizer &bull; Lava Lamp True RNG</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <!-- True RNG Engine Toggle -->
+      <button class="btn" id="btn-toggle-rng" title="Toggle RNG: Standard Pseudo vs Physical Lava Lamp Entropy Simulation">
+        <span id="rng-mode-label">🎲 RNG: Standard</span>
+      </button>
+
+      <!-- Lava Lamp Live Monitor Modal -->
+      <button class="btn btn-lava" id="btn-open-lava" title="Open Real-time Lava Lamp Entropy Pool">
+        🔥 Lava Lamp Engine
+      </button>
+
+      <!-- Media Preference Toggle -->
+      <button class="btn" id="btn-toggle-global-media" title="Toggle global action preference between animated GIF and still picture">
+        <span id="global-media-label">🎞️ GIFs: ON</span>
+      </button>
+
+      <!-- Deck IO -->
+      <button class="btn" id="btn-open-io" title="Import or Export your 00–99 deck (JSON / CSV)">
+        📥 / 📤 Deck IO
+      </button>
+
+      <!-- Master Audio Toggle -->
+      <button class="btn-icon btn" id="btn-audio-mute" title="Toggle audio effects and voice recitation">
+        🔊
+      </button>
+
+      <!-- Speech Voice Settings -->
+      <button class="btn-icon btn" id="btn-voice-settings" title="Speech Voice and Audio Tuning">
+        🎙️
+      </button>
+    </div>
+  </header>
+
+  <nav class="tab-bar">
+    <button data-target="panel-gauntlet" class="active">1. 🏆 Sequential Gauntlet</button>
+    <button data-target="panel-flashcard">2. 📇 Flashcards (SRS)</button>
+    <button data-target="panel-deck-memorizer">3. 🃏 Deck Memorizer (1-1000 Decks)</button>
+    <button data-target="panel-reverse">4. 🔄 Reverse Drill</button>
+    <button data-target="panel-decode">5. 🧩 6-Digit Decode</button>
+    <button data-target="panel-storyboard">6. 🎬 Storyboard</button>
+    <button data-target="panel-metronome">7. ⏱️ Speed Metronome</button>
+    <button data-target="panel-palace">8. 🏛️ Loci Palace</button>
+    <button data-target="panel-slicer">9. ✂️ Stream Slicer</button>
+    <button data-target="panel-registry">10. 📚 Master Registry (00–99)</button>
+  </nav>
+
+  <main>
+    <div id="panel-gauntlet" class="panel active">
+      <div class="card-shell" style="max-width:920px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+          <div style="text-align:left;">
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Sequential Gauntlet</div>
+            <h2 style="font-size:1.8rem; font-weight:900; color:var(--accent);" id="gauntlet-header-num">Card [00]</h2>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+            <label style="font-size:0.78rem; color:var(--text-muted); font-weight:600;">Checkpoint Policy:</label>
+            <select id="gauntlet-policy-select" style="font-size:0.78rem; padding:0.35rem 0.6rem;">
+              <option value="10">Every 10 Cards (00, 10, 20...)</option>
+              <option value="25">Every 25 Cards (00, 25, 50, 75)</option>
+              <option value="manual">Manual Pin Checkpoint</option>
+              <option value="ironman">Ironman (Reset to 00 on miss)</option>
+            </select>
+            <button class="btn" id="gauntlet-pin-btn" style="padding:0.35rem 0.65rem; font-size:0.75rem;">📌 Pin Checkpoint (<span id="gauntlet-pin-display">00</span>)</button>
+          </div>
+        </div>
+
+        <div style="width:100%; height:7px; background:#060912; border-radius:4px; overflow:hidden; border:1px solid var(--border); margin-bottom:1.25rem;">
+          <div id="gauntlet-progress-bar" style="width:1%; height:100%; background:linear-gradient(90deg, #38bdf8, #818cf8); transition:width 0.25s ease;"></div>
+        </div>
+
+        <div style="font-size:2.8rem; font-weight:900; letter-spacing:3px; color:var(--accent);" id="gauntlet-num-disp" class="mono">00</div>
+        <div style="font-size:1.2rem; font-weight:700; color:var(--text-muted); margin-bottom:1rem;" id="gauntlet-init-disp">O.O.</div>
+
+        <div class="pao-trio-grid">
+          <div class="pao-column col-p">
+            <div class="pao-badge-row">
+              <span class="pao-pill pill-p">Person</span>
+              <span class="mono" id="gauntlet-p-code" style="font-size:0.72rem; color:var(--person-color);">[00]</span>
+            </div>
+            <div class="pao-img-viewport" id="gauntlet-p-img"></div>
+            <div class="pao-info-box">
+              <div class="pao-title" id="gauntlet-p-name">???</div>
+              <div class="pao-sub">Person (Physical Identity)</div>
+            </div>
+          </div>
+
+          <div class="pao-column col-a">
+            <div class="pao-badge-row">
+              <span class="pao-pill pill-a">Action</span>
+              <span class="media-indicator-tag" id="gauntlet-action-media-toggle">🎞️ GIF</span>
+            </div>
+            <div class="pao-img-viewport" id="gauntlet-a-img"></div>
+            <div class="pao-info-box">
+              <div class="pao-title" id="gauntlet-a-name">???</div>
+              <div class="pao-sub">Action (Kinetic Motion)</div>
+            </div>
+          </div>
+
+          <div class="pao-column col-o">
+            <div class="pao-badge-row">
+              <span class="pao-pill pill-o">Object</span>
+              <span class="mono" id="gauntlet-o-code" style="font-size:0.72rem; color:var(--object-color);">[00]</span>
+            </div>
+            <div class="pao-img-viewport" id="gauntlet-o-img"></div>
+            <div class="pao-info-box">
+              <div class="pao-title" id="gauntlet-o-name">???</div>
+              <div class="pao-sub">Object (Target / Prop)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Synthesized Sentence Banner at the bottom -->
+        <div id="gauntlet-story-banner" class="mnemonic-story-banner" style="display:none;"></div>
+
+        <div id="gauntlet-reveal-row" style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;">
+          <button class="btn btn-primary" id="gauntlet-btn-reveal" style="padding:0.75rem 2.2rem; font-size:1rem;">Reveal Visuals (Space)</button>
+        </div>
+
+        <div id="gauntlet-grade-row" style="display:none; justify-content:center; gap:1.25rem; margin-top:1rem;">
+          <button class="btn btn-fail" id="gauntlet-btn-fail" style="padding:0.75rem 1.8rem;">❌ Mistake (Back to Checkpoint)</button>
+          <button class="btn btn-pass" id="gauntlet-btn-pass" style="padding:0.75rem 1.8rem;">✅ Pass & Advance (Next Card)</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-flashcard" class="panel">
+      <div class="card-shell" style="max-width:920px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">Weighted Spaced Repetition (SRS)</div>
+          <div class="badge-stat">Weight: <span id="fc-weight-display">1.00</span></div>
+        </div>
+        <div style="font-size:3.5rem; font-weight:900; letter-spacing:4px; color:var(--accent);" id="fc-num-disp" class="mono">--</div>
+        <div style="font-size:1.3rem; font-weight:700; color:var(--text-muted); margin-bottom:1rem;" id="fc-init-disp">--</div>
+
+        <div class="pao-trio-grid">
+          <div class="pao-column col-p">
+            <div class="pao-badge-row"><span class="pao-pill pill-p">Person</span></div>
+            <div class="pao-img-viewport" id="fc-p-img-box"></div>
+            <div class="pao-info-box"><div class="pao-title" id="fc-p-name">???</div></div>
+          </div>
+          <div class="pao-column col-a">
+            <div class="pao-badge-row">
+              <span class="pao-pill pill-a">Action</span>
+              <span class="media-indicator-tag" id="fc-action-media-toggle">🎞️ GIF</span>
+            </div>
+            <div class="pao-img-viewport" id="fc-a-img-box"></div>
+            <div class="pao-info-box"><div class="pao-title" id="fc-a-name">???</div></div>
+          </div>
+          <div class="pao-column col-o">
+            <div class="pao-badge-row"><span class="pao-pill pill-o">Object</span></div>
+            <div class="pao-img-viewport" id="fc-o-img-box"></div>
+            <div class="pao-info-box"><div class="pao-title" id="fc-o-name">???</div></div>
+          </div>
+        </div>
+
+        <div id="fc-story-banner" class="mnemonic-story-banner" style="display:none;"></div>
+
+        <div id="fc-reveal-wrap" style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;">
+          <button class="btn btn-primary" id="fc-btn-reveal" style="padding:0.75rem 2.2rem;">Reveal (Space)</button>
+        </div>
+        <div id="fc-grade-wrap" style="display:none; justify-content:center; gap:1.25rem; margin-top:1rem;">
+          <button class="btn btn-fail" id="fc-btn-fail" style="padding:0.75rem 1.8rem;">❌ Hard / Missed (Weight +2.5)</button>
+          <button class="btn btn-pass" id="fc-btn-pass" style="padding:0.75rem 1.8rem;">✅ Mastered (Weight -25%)</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-deck-memorizer" class="panel">
+      <div class="card-shell" style="max-width:980px;">
+        <div class="deck-hero-bar">
+          <div style="text-align:left;">
+            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Dominic Playing Card Engine (Competition Standard)</div>
+            <h2 style="font-size:1.45rem; font-weight:900; color:var(--accent);">Deck Memorizer (1 to 1,000 Decks)</h2>
+          </div>
+          <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+            <div class="deck-timer-badge" id="deck-timer-display">⏱️ 00:00.0</div>
+            <label style="font-size:0.78rem; font-weight:700; color:var(--text-muted);">Decks:</label>
+            <input type="number" id="deck-in-count" value="1" min="1" max="1000" style="width:75px; text-align:center;">
+            <button class="btn btn-primary" id="deck-btn-generate">🔀 Deal / Shuffle</button>
+            <button class="btn" id="deck-btn-timer-toggle">▶ Start Timer</button>
+            <button class="btn btn-lava" id="deck-btn-switch-phase">📝 Start Recall Test</button>
+            <button class="btn" id="deck-btn-show-mapping">ℹ️ Card Mappings</button>
+          </div>
+        </div>
+
+        <!-- Memorization Phase UI -->
+        <div id="deck-phase-memorize-box">
+          <!-- Progress and Triad Navigation -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+            <div style="font-size:0.85rem; color:var(--text-muted);" id="deck-status-txt">
+              Station <strong style="color:#fff;" id="deck-cur-station">1</strong> of <strong id="deck-total-stations">18</strong> 
+              &bull; Cards <span id="deck-card-range">1–3</span> of <span id="deck-total-cards">52</span>
+              &bull; <span id="deck-station-rule-tag" style="color:var(--accent); font-weight:700;">Standard Triad (3 Cards)</span>
+            </div>
+            <div style="display:flex; gap:0.4rem; align-items:center;">
+              <button class="btn" id="deck-btn-prev">⬅️ Previous</button>
+              <input type="number" id="deck-jump-station-in" value="1" min="1" style="width:65px; text-align:center; font-size:0.8rem; padding:0.35rem;">
+              <button class="btn" id="deck-btn-jump">Jump</button>
+              <button class="btn" id="deck-btn-next">Next ➡️</button>
+            </div>
+          </div>
+
+          <!-- 3 Playing Cards Rendering in Locus Triad -->
+          <div class="cards-triad-row" id="deck-cards-container"></div>
+
+          <!-- Triad PAO Media Breakdown Container -->
+          <div class="pao-trio-grid" id="deck-pao-visuals-grid">
+            <div class="pao-column col-p">
+              <div class="pao-badge-row">
+                <span class="pao-pill pill-p">1. Person</span>
+                <span class="mono" id="deck-p-code" style="font-size:0.72rem; color:var(--person-color);">[--]</span>
+              </div>
+              <div class="pao-img-viewport" id="deck-p-img"></div>
+              <div class="pao-info-box"><div class="pao-title" id="deck-p-name">???</div></div>
+            </div>
+            <div class="pao-column col-a">
+              <div class="pao-badge-row">
+                <span class="pao-pill pill-a">2. Action</span>
+                <span class="media-indicator-tag" id="deck-action-media-toggle">🎞️ GIF</span>
+              </div>
+              <div class="pao-img-viewport" id="deck-a-img"></div>
+              <div class="pao-info-box"><div class="pao-title" id="deck-a-name">???</div></div>
+            </div>
+            <div class="pao-column col-o">
+              <div class="pao-badge-row">
+                <span class="pao-pill pill-o">3. Object</span>
+                <span class="mono" id="deck-o-code" style="font-size:0.72rem; color:var(--object-color);">[--]</span>
+              </div>
+              <div class="pao-img-viewport" id="deck-o-img"></div>
+              <div class="pao-info-box"><div class="pao-title" id="deck-o-name">???</div></div>
+            </div>
+          </div>
+
+          <!-- Synthesized Sentence for the 3-Card Locus -->
+          <div id="deck-story-banner" class="mnemonic-story-banner">
+            <strong>Synthesized Mental Story:</strong> Load deck to generate.
+          </div>
+        </div>
+
+        <!-- Recall Test Phase UI -->
+        <div id="deck-phase-recall-box" style="display:none; text-align:left;">
+          <div style="background:#080d1a; padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border); margin-bottom:1rem;">
+            <h3 style="color:var(--accent); font-size:1.15rem; margin-bottom:0.35rem;">📝 Card Recall Verification</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">
+              Reconstruct the cards you memorized along your stations. Enter cards in format: <strong style="color:#fff;">AS, KH, 10D, 2C</strong> or Dominic numbers <strong style="color:#fff;">16, 88, 04, 23</strong>.
+            </p>
+            <div id="deck-recall-stations-grid" style="display:flex; flex-direction:column; gap:0.75rem; max-height:420px; overflow-y:auto; padding-right:0.5rem;"></div>
+          </div>
+          <div style="display:flex; gap:0.75rem; justify-content:center;">
+            <button class="btn btn-primary" id="deck-btn-submit-recall" style="padding:0.7rem 2rem;">Grade Recall Accuracy</button>
+            <button class="btn" id="deck-btn-exit-recall">Back to Memorization</button>
+          </div>
+          <div id="deck-recall-score-banner" style="margin-top:1rem; display:none;"></div>
+        </div>
+
+        <!-- Modal Reference for 52 Card Dominic Mapping -->
+        <div id="deck-mapping-modal" class="modal-overlay" onclick="this.classList.remove('active')">
+          <div class="modal-content" onclick="event.stopPropagation();" style="max-width:740px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <h3 class="modal-title">Dominic Playing Card Mapping Reference</h3>
+              <button class="btn-icon" onclick="document.getElementById('deck-mapping-modal').classList.remove('active')">✕</button>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">
+              Standard rule: Value (1st Letter) + Suit (2nd Letter) with Spades=S (6), Clubs=C (3), Diamonds=D (4), Hearts=H (8). Court cards map to distinct figures.
+            </p>
+            <div style="max-height:360px; overflow-y:auto;">
+              <table class="card-ref-table">
+                <thead>
+                  <tr><th>Card</th><th>Dominic Init</th><th>Code</th><th>Person</th><th>Action</th><th>Object</th></tr>
+                </thead>
+                <tbody id="deck-ref-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="panel-reverse" class="panel">
+      <div class="card-shell" style="max-width:700px;">
+        <span class="pao-pill" id="rev-type-pill" style="margin-bottom:0.75rem;">PERSON</span>
+        <h2 style="font-size:2rem; font-weight:800; margin-bottom:1.5rem;" id="rev-cue-text">---</h2>
+        <div style="display:flex; justify-content:center; gap:0.5rem; margin-bottom:1.5rem;">
+          <input type="text" id="rev-input" maxlength="2" placeholder="00" class="mono" style="width:110px; font-size:1.6rem; text-align:center; font-weight:800;">
+          <button class="btn btn-primary" id="rev-btn-check" style="font-size:1rem; padding:0.6rem 1.4rem;">Submit</button>
+        </div>
+        <div id="rev-feedback" style="min-height:55px; font-size:1.05rem;"></div>
+        <div id="rev-story-banner" class="mnemonic-story-banner" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div id="panel-decode" class="panel">
+      <div class="card-shell" style="max-width:740px; text-align:left;">
+        <div style="text-align:center; margin-bottom:1.25rem;">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">6-Digit Decoding Challenge</span>
+          <div class="mono" style="font-size:2.8rem; font-weight:900; letter-spacing:4px; color:var(--accent);" id="dec-chunk-disp">------</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:0.9rem; margin-bottom:1.5rem;">
+          <div>
+            <label style="font-size:0.78rem; font-weight:700; color:var(--person-color); display:block; margin-bottom:0.25rem;" id="dec-lbl-p">Person [P1]:</label>
+            <input type="text" id="dec-in-p" placeholder="Who is the actor?" style="width:100%;">
+          </div>
+          <div>
+            <label style="font-size:0.78rem; font-weight:700; color:var(--action-color); display:block; margin-bottom:0.25rem;" id="dec-lbl-a">Action [A2]:</label>
+            <input type="text" id="dec-in-a" placeholder="What is the motion?" style="width:100%;">
+          </div>
+          <div>
+            <label style="font-size:0.78rem; font-weight:700; color:var(--object-color); display:block; margin-bottom:0.25rem;" id="dec-lbl-o">Object [O3]:</label>
+            <input type="text" id="dec-in-o" placeholder="What is the target/prop?" style="width:100%;">
+          </div>
+        </div>
+        <button class="btn btn-primary" id="dec-btn-grade" style="width:100%; padding:0.8rem; font-size:1rem;">Grade 6-Digit Recall</button>
+        <div id="dec-result-box" style="margin-top:1.25rem; display:none;"></div>
+        <div id="dec-story-banner" class="mnemonic-story-banner" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div id="panel-storyboard" class="panel">
+      <div class="card-shell" style="max-width:920px;">
+        <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">6-Digit Synthesis Storyboard</div>
+        <div class="mono" style="font-size:3rem; font-weight:900; letter-spacing:5px; color:var(--accent); margin:0.35rem 0 1rem 0;" id="sb-chunk-disp">-- - -- - --</div>
+
+        <div class="pao-trio-grid">
+          <div class="pao-column col-p">
+            <div class="pao-badge-row">
+              <span class="pao-pill pill-p">1. Person</span>
+              <span class="mono" id="sb-p-code" style="font-size:0.75rem; color:var(--person-color);">[--]</span>
+            </div>
+            <div class="pao-img-viewport" id="sb-p-img"></div>
+            <div class="pao-info-box"><div class="pao-title" id="sb-p-title">???</div></div>
+          </div>
+          <div class="pao-column col-a">
+            <div class="pao-badge-row">
+              <span class="pao-pill pill-a">2. Action</span>
+              <span class="media-indicator-tag" id="sb-action-media-toggle">🎞️ GIF</span>
+            </div>
+            <div class="pao-img-viewport" id="sb-a-img"></div>
+            <div class="pao-info-box"><div class="pao-title" id="sb-a-title">???</div></div>
+          </div>
+          <div class="pao-column col-o">
+            <div class="pao-badge-row">
+              <span class="pao-pill pill-o">3. Object</span>
+              <span class="mono" id="sb-o-code" style="font-size:0.75rem; color:var(--object-color);">[--]</span>
+            </div>
+            <div class="pao-img-viewport" id="sb-o-img"></div>
+            <div class="pao-info-box"><div class="pao-title" id="sb-o-title">???</div></div>
+          </div>
+        </div>
+
+        <div id="sb-story-banner" class="mnemonic-story-banner" style="display:none;"></div>
+
+        <div style="display:flex; justify-content:center; gap:1rem;">
+          <button class="btn btn-primary" id="sb-btn-reveal" style="padding:0.75rem 2rem;">Reveal Composite Scene</button>
+          <button class="btn" id="sb-btn-next" style="display:none; padding:0.75rem 1.75rem;">Next 6-Digit Story ➔</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-metronome" class="panel">
+      <div class="card-shell" style="max-width:700px;">
+        <h2 style="color:var(--accent); margin-bottom:0.75rem;">Speed Flash Metronome</h2>
+        <div style="display:flex; justify-content:center; gap:1.25rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Seconds Per Card:</label>
+            <input type="number" id="metro-in-pace" value="2.5" step="0.5" min="0.8" max="10" style="width:85px; text-align:center;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Card Quantity:</label>
+            <input type="number" id="metro-in-qty" value="15" min="5" max="100" style="width:85px; text-align:center;">
+          </div>
+        </div>
+        <button class="btn btn-primary" id="metro-btn-start" style="padding:0.65rem 2rem;">Start Flash Drill</button>
+        <div style="margin-top:2rem;">
+          <div class="mono" style="font-size:4.5rem; font-weight:900; color:var(--accent);" id="metro-num-disp">--</div>
+          <div style="min-height:70px; font-size:1.2rem; color:var(--text-muted); margin-top:0.75rem;" id="metro-info-disp">Press Start</div>
+          <div id="metro-story-banner" class="mnemonic-story-banner" style="display:none; text-align:center;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-palace" class="panel">
+      <div class="card-shell" style="max-width:920px;" id="palace-setup-box">
+        <h2 style="color:var(--accent); margin-bottom:0.5rem;">Spatial Loci Palace Route</h2>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.25rem;">Plot sequential 6-digit chunk stations along an architectural mental journey.</p>
+        <div style="margin-bottom:1.25rem;">
+          <label style="font-size:0.8rem; color:var(--text-muted);">Number of Stations:</label>
+          <input type="number" id="palace-in-count" value="5" min="2" max="12" style="width:80px; margin-left:0.5rem; text-align:center;">
+        </div>
+        <button class="btn btn-primary" id="palace-btn-build">Generate Loci Pathway</button>
+      </div>
+
+      <div class="card-shell" style="max-width:920px; display:none;" id="palace-route-box">
+        <h3 style="color:var(--accent); margin-bottom:1rem;">Your Spatial Journey</h3>
+        <div id="palace-stations-list" style="display:flex; flex-direction:column; gap:0.75rem; text-align:left; margin-bottom:1.5rem;"></div>
+        <button class="btn btn-primary" id="palace-btn-begin-test" style="width:100%; padding:0.75rem;">Begin Recall Verification</button>
+      </div>
+
+      <div class="card-shell" style="max-width:920px; display:none;" id="palace-test-box">
+        <h3 style="color:var(--accent); margin-bottom:1rem;">Loci Recall Challenge</h3>
+        <div id="palace-inputs-list" style="display:flex; flex-direction:column; gap:0.75rem; text-align:left; margin-bottom:1.5rem;"></div>
+        <button class="btn btn-primary" id="palace-btn-grade" style="width:100%; padding:0.75rem;">Check Loci Accuracy</button>
+        <div id="palace-results-summary" style="margin-top:1.25rem;"></div>
+      </div>
+    </div>
+
+    <div id="panel-slicer" class="panel">
+      <div class="card-shell" style="max-width:800px; text-align:left;">
+        <h2 style="color:var(--accent); margin-bottom:0.5rem;">Arbitrary Stream Slicer</h2>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Paste any long sequence of digits to slice them into PAO stations with complete story sentences.</p>
+        <textarea id="slicer-input" rows="3" placeholder="Paste digits (e.g., 3141592653589793238462643383...)" style="width:100%; font-family:monospace; margin-bottom:1rem;"></textarea>
+        <button class="btn btn-primary" id="slicer-btn-slice" style="width:100%; padding:0.75rem;">Slice into PAO Loci</button>
+        <div id="slicer-results" style="margin-top:1.5rem; display:none;"></div>
+      </div>
+    </div>
+
+    <div id="panel-registry" class="panel">
+      <div class="card-shell" style="max-width:1120px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+          <div>
+            <h2 style="font-size:1.35rem; font-weight:800; color:var(--accent);">00–99 Master Registry</h2>
+            <p style="font-size:0.75rem; color:var(--text-muted);">All 100 cards with auto-resolved visuals, GIF controls, and instant re-rolling.</p>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <input type="text" id="reg-search-input" placeholder="🔍 Search deck..." style="font-size:0.78rem; padding:0.35rem 0.65rem; width:180px;">
+            <button class="btn" id="reg-btn-auto-prefill">⚡ Refresh All Visuals</button>
+            <button class="btn" id="reg-btn-filter-weak">Show Weakest Cards</button>
+            <button class="btn btn-fail" id="reg-btn-reset-weights" style="font-size:0.75rem;">Reset Weights</button>
+          </div>
+        </div>
+
+        <div class="table-viewport">
+          <table class="registry-table" id="reg-table">
+            <thead>
+              <tr>
+                <th style="width:45px;">#</th>
+                <th style="width:50px;">Init</th>
+                <th style="min-width:210px;">Person & Visual</th>
+                <th style="min-width:250px;">Action & Media (GIF / PIC)</th>
+                <th style="min-width:210px;">Object & Visual</th>
+                <th style="width:60px;">Weight</th>
+                <th style="width:50px;">Miss</th>
+                <th style="width:65px;">Edit</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="lava-modal">
+    <div class="modal-content" style="max-width:640px; text-align:center;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 class="modal-title" style="color:#f97316;">🔥 Lava Lamp True Entropy Engine</h3>
+        <button class="btn-icon" onclick="document.getElementById('lava-modal').classList.remove('active')">✕</button>
+      </div>
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1rem;">
+        Inspired by Cloudflare's Wall of Entropy in San Francisco. A real-time chaotic convection simulation generates physical fluid turbulence, combined with the Web Cryptography API to generate true random numbers for all card deck shuffles and drills.
+      </p>
+
+      <div style="display:flex; justify-content:center; align-items:center; gap:1.5rem; margin-bottom:1.25rem;">
+        <canvas id="lava-canvas" width="160" height="260" style="border-radius:24px; border:3px solid #ea580c; background:#120502; box-shadow:0 0 25px rgba(234, 88, 12, 0.4);"></canvas>
+        <div style="text-align:left; font-size:0.8rem; display:flex; flex-direction:column; gap:0.5rem;">
+          <div>Status: <span style="color:#4ade80; font-weight:800;">ACTIVE (Continuous Convection)</span></div>
+          <div>Entropy Source: <span class="mono" style="color:#fb923c;">Fluid Dynamics + Crypto API</span></div>
+          <div>Current Entropy Hash: <div id="lava-hash-disp" class="mono" style="font-size:0.7rem; color:var(--accent); word-break:break-all; max-width:260px; margin-top:2px;">---</div></div>
+          <div>Harvest Rate: <span style="font-weight:700;">60 frames/sec</span></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="document.getElementById('lava-modal').classList.remove('active')" style="width:100%;">Keep Engine Active & Close Monitor</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="finder-modal">
+    <div class="modal-content" style="max-width:760px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+        <h3 class="modal-title" id="finder-title">Find Visual</h3>
+        <button class="btn-icon" onclick="closeFinderModal()">✕</button>
+      </div>
+
+      <!-- Quick Suggestion Query Chips -->
+      <div id="finder-chips-row" style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.75rem;"></div>
+
+      <!-- Provider Tabs: GIPHY, Wikimedia, Wikipedia, Tenor/Openverse, Direct -->
+      <div class="source-tab-row">
+        <button class="source-tab-btn active" data-src="giphy">1. 🎬 GIPHY (Animated GIFs)</button>
+        <button class="source-tab-btn" data-src="wiki">2. 🏛️ Wikipedia (Articles)</button>
+        <button class="source-tab-btn" data-src="commons">3. 📸 Wikimedia Commons</button>
+        <button class="source-tab-btn" data-src="openverse">4. 🎨 Openverse (CC)</button>
+        <button class="source-tab-btn" data-src="direct">5. 📁 Custom URL / Upload</button>
+      </div>
+
+      <div style="display:flex; gap:0.5rem; margin-bottom:0.75rem;">
+        <input type="text" id="finder-search-input" placeholder="Search keywords..." style="flex-grow:1;">
+        <button class="btn btn-primary" id="finder-btn-search">Search Provider</button>
+      </div>
+
+      <!-- Action slot choice if editing Action -->
+      <div id="finder-action-target-row" style="display:none; gap:1rem; align-items:center; margin-bottom:0.75rem; font-size:0.8rem; background:#080d1a; padding:0.4rem 0.75rem; border-radius:6px;">
+        <span style="font-weight:700; color:var(--action-color);">Assign Result To:</span>
+        <label><input type="radio" name="finder-action-target" value="gif" checked> Animated GIF</label>
+        <label><input type="radio" name="finder-action-target" value="pic"> Still Picture (Fallback)</label>
+      </div>
+
+      <div id="finder-results-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:0.6rem; max-height:280px; overflow-y:auto; margin-bottom:1rem; padding:0.5rem; background:#080d1a; border-radius:6px; border:1px solid var(--border);"></div>
+
+      <div style="border-top:1px solid var(--border); padding-top:0.75rem;">
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.35rem;">Direct URL / Local image file:</div>
+        <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+          <input type="text" id="finder-manual-url" placeholder="https://... direct image or GIF URL" style="flex-grow:1; font-size:0.78rem;">
+          <input type="file" id="finder-file-input" accept="image/*" style="display:none;">
+          <button class="btn" onclick="document.getElementById('finder-file-input').click()">📁 File</button>
+        </div>
+        <button class="btn btn-primary" id="finder-btn-apply" style="width:100%;">Apply Visual to Card</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal-content" style="max-width:760px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 class="modal-title" id="modal-card-title">Edit Card [00]</h3>
+        <button class="btn-icon" onclick="document.getElementById('edit-modal').classList.remove('active')">✕</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 80px 1fr 1fr 1fr; gap:0.6rem; text-align:left; align-items:end;">
+        <div>
+          <label style="font-size:0.72rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:2px;">Initials:</label>
+          <input type="text" id="modal-in-init" class="mono" style="width:100%; padding:0.45rem;">
+        </div>
+        <div>
+          <label style="font-size:0.72rem; font-weight:700; color:var(--person-color); display:block; margin-bottom:2px;">Person:</label>
+          <input type="text" id="modal-in-p" style="width:100%; padding:0.45rem;">
+        </div>
+        <div>
+          <label style="font-size:0.72rem; font-weight:700; color:var(--action-color); display:block; margin-bottom:2px;">Action:</label>
+          <input type="text" id="modal-in-a" style="width:100%; padding:0.45rem;">
+        </div>
+        <div>
+          <label style="font-size:0.72rem; font-weight:700; color:var(--object-color); display:block; margin-bottom:2px;">Object:</label>
+          <input type="text" id="modal-in-o" style="width:100%; padding:0.45rem;">
+        </div>
+      </div>
+
+      <div style="margin-top:1.25rem;">
+        <button class="btn btn-primary" id="modal-btn-save" style="width:100%; padding:0.65rem;">Save Changes & Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="io-modal">
+    <div class="modal-content" style="max-width:700px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 class="modal-title">Deck Import & Export Center</h3>
+        <button class="btn-icon" onclick="document.getElementById('io-modal').classList.remove('active')">✕</button>
+      </div>
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1.25rem;">
+        Export your current deck to JSON or CSV for Excel/Sheets. Import customized decks back anytime.
+      </p>
+
+      <div style="background:#080d1a; border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.25rem;">
+        <div style="font-size:0.85rem; font-weight:800; color:var(--accent); margin-bottom:0.5rem;">📤 EXPORT DECK</div>
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="io-btn-export-json">💾 Export Current (JSON)</button>
+          <button class="btn" id="io-btn-export-csv">📊 Export Current (CSV)</button>
+          <button class="btn" id="io-btn-export-default-json">📄 Export Factory Default (JSON)</button>
+        </div>
+      </div>
+
+      <div style="background:#080d1a; border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.25rem;">
+        <div style="font-size:0.85rem; font-weight:800; color:var(--success); margin-bottom:0.5rem;">📥 IMPORT / UPLOAD DECK</div>
+        <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.75rem;">
+          <input type="file" id="io-file-input" accept=".json,.csv" style="font-size:0.8rem; flex-grow:1;">
+          <button class="btn btn-pass" id="io-btn-upload-file">Upload & Apply</button>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:1rem;">
+        <span style="font-size:0.78rem; color:var(--text-sub);">Factory Reset Deck?</span>
+        <button class="btn btn-fail" id="io-btn-factory-reset">⚠️ Reset to Factory Defaults</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="lightbox-modal" onclick="this.classList.remove('active')">
+    <div style="display:flex; flex-direction:column; align-items:center; max-width:92vw;">
+      <img id="lightbox-img" src="" alt="Zoomed Visual" style="max-height:82vh; border-radius:12px; box-shadow:0 25px 60px rgba(0,0,0,0.9);">
+      <div id="lightbox-caption" style="margin-top:0.75rem; color:#fff; font-size:1.1rem; font-weight:700;"></div>
+    </div>
+  </div>
+
+  <div id="toast">Notification</div>
+
+  <script>
+    const DEFAULT_MASTER_DECK = {
+      "00": { initials: "O.O.", person: "Olive Oyl", action: "screeching and clobbering with", object: "cast iron skillet", pq: "Olive Oyl", wiki_slug: "Olive_Oyl", aq: "clobber fight", oq: "Cast-iron cookware" },
+      "01": { initials: "O.A.", person: "Odin Allfather", action: "hurling lightning-charged", object: "Gungnir spear", pq: "Odin", wiki_slug: "Odin", aq: "throwing spear lightning", oq: "Gungnir" },
+      "02": { initials: "O.B.", person: "Orlando Bloom", action: "shooting flaming arrow from", object: "elven longbow", pq: "Orlando Bloom", wiki_slug: "Orlando_Bloom", aq: "archery shooting bow", oq: "Longbow" },
+      "03": { initials: "O.C.", person: "Oswald Cobblepot", action: "firing machine gun from", object: "razor-blade umbrella", pq: "Penguin (character)", wiki_slug: "Penguin_(character)", aq: "umbrella machine gun", oq: "Umbrella" },
+      "04": { initials: "O.D.", person: "Olivia Dunham", action: "telekinetically igniting", object: "Cortexiphan typewriter", pq: "Olivia Dunham", wiki_slug: "Olivia_Dunham", aq: "telekinesis fire", oq: "Typewriter" },
+      "05": { initials: "O.E.", person: "Ophelia Evans", action: "hexing and throat-slashing with", object: "bloodied grimoire", pq: "Ophelia", wiki_slug: "Ophelia", aq: "witch spell hexing", oq: "Grimoire" },
+      "06": { initials: "O.S.", person: "O.J. Simpson", action: "ramming into", object: "white Ford Bronco", pq: "O. J. Simpson", wiki_slug: "O._J._Simpson", aq: "car chase speeding", oq: "Ford Bronco" },
+      "07": { initials: "O.G.", person: "Oscar the Grouch", action: "slamming lid and popping from", object: "rusted metal trash can", pq: "Oscar the Grouch", wiki_slug: "Oscar_the_Grouch", aq: "trash can slam", oq: "Waste container" },
+      "08": { initials: "O.H.", person: "Otto Hightower", action: "pinning golden Hand brooch onto", object: "velvet council doublet", pq: "Otto Hightower", wiki_slug: "Otto_Hightower", aq: "pinning brooch", oq: "Brooch" },
+      "09": { initials: "O.N.", person: "Orin N", action: "hacking neural cyberware with", object: "glowing Mantis Blade", pq: "Cyberpunk 2077", wiki_slug: "Cyberpunk_2077", aq: "cyberpunk blade slashing", oq: "Blade" },
+      "10": { initials: "L.B.", person: "Lola Bunny", action: "spinning crossover-dribble with", object: "Tune Squad basketball", pq: "Lola Bunny", wiki_slug: "Lola_Bunny", aq: "basketball crossover dribble", oq: "Basketball" },
+      "11": { initials: "A.A.", person: "Alastor Altruist", action: "broadcasting demonic static through", object: "vintage microphone staff", pq: "Hazbin Hotel", wiki_slug: "Hazbin_Hotel", aq: "radio broadcast static", oq: "Microphone" },
+      "12": { initials: "A.B.", person: "Alec Baldwin", action: "bludgeoning with", object: "brass Oscars trophy", pq: "Alec Baldwin", wiki_slug: "Alec_Baldwin", aq: "smashing trophy", oq: "Academy Award" },
+      "13": { initials: "A.C.", person: "Al Capone", action: "spraying bullets from", object: "Tommy gun", pq: "Al Capone", wiki_slug: "Al_Capone", aq: "tommy gun shooting", oq: "Thompson submachine gun" },
+      "14": { initials: "A.D.", person: "Albus Dumbledore", action: "conjuring fiery storm with", object: "Elder Wand", pq: "Albus Dumbledore", wiki_slug: "Albus_Dumbledore", aq: "fire wand magic", oq: "Wand" },
+      "15": { initials: "A.E.", person: "Albert Einstein", action: "scratching formulas onto", object: "slate chalkboard", pq: "Albert Einstein", wiki_slug: "Albert_Einstein", aq: "writing math chalk", oq: "Blackboard" },
+      "16": { initials: "A.S.", person: "Arnold Schwarzenegger", action: "bench-pressing heavy", object: "500lb barbell", pq: "Arnold Schwarzenegger", wiki_slug: "Arnold_Schwarzenegger", aq: "bench press bodybuilding", oq: "Barbell" },
+      "17": { initials: "A.G.", person: "Ariana Grande", action: "whipping violently with", object: "giant ponytail extension", pq: "Ariana Grande", wiki_slug: "Ariana_Grande", aq: "hair whip ponytail", oq: "Ponytail" },
+      "18": { initials: "A.H.", person: "Adolf Hitler", action: "goose-stepping over", object: "swastika podium", pq: "Adolf Hitler", wiki_slug: "Adolf_Hitler", aq: "military marching", oq: "Podium" },
+      "19": { initials: "A.N.", person: "Alfred Nobel", action: "detonating stick of", object: "sweating dynamite", pq: "Alfred Nobel", wiki_slug: "Alfred_Nobel", aq: "dynamite explosion", oq: "Dynamite" },
+      "20": { initials: "B.O.", person: "Barack Obama", action: "shattering", object: "glass teleprompter", pq: "Barack Obama", wiki_slug: "Barack_Obama", aq: "glass shatter smashing", oq: "Teleprompter" },
+      "21": { initials: "B.A.", person: "Ben Affleck", action: "strapping on armored", object: "Batman cowl", pq: "Ben Affleck", wiki_slug: "Ben_Affleck", aq: "helmet mask donning", oq: "Cowl" },
+      "22": { initials: "B.B.", person: "Bugs Bunny", action: "chomping noisily on", object: "giant raw carrot", pq: "Bugs Bunny", wiki_slug: "Bugs_Bunny", aq: "eating carrot crunching", oq: "Carrot" },
+      "23": { initials: "B.C.", person: "Benedict Cumberbatch", action: "deducing clues through", object: "curved calabash pipe", pq: "Benedict Cumberbatch", wiki_slug: "Benedict_Cumberbatch", aq: "smoking pipe", oq: "Tobacco pipe" },
+      "24": { initials: "B.D.", person: "Bob Dylan", action: "shredding mouth on", object: "neck-rack harmonica", pq: "Bob Dylan", wiki_slug: "Bob_Dylan", aq: "harmonica playing solo", oq: "Harmonica" },
+      "25": { initials: "B.E.", person: "Billie Eilish", action: "strangling with", object: "baggy neon green hoodie", pq: "Billie Eilish", wiki_slug: "Billie_Eilish", aq: "hoodie pulling", oq: "Hoodie" },
+      "26": { initials: "B.S.", person: "Brandon Sanderson", action: "slashing cleanly with", object: "glowing six-foot Shardblade", pq: "Brandon Sanderson", wiki_slug: "Brandon_Sanderson", aq: "greatsword slash", oq: "Zweihänder" },
+      "27": { initials: "B.G.", person: "Barbara Gordon", action: "rapid-fire typing into", object: "Batcomputer mainframe", pq: "Barbara Gordon", wiki_slug: "Barbara_Gordon", aq: "fast typing keyboard", oq: "Supercomputer" },
+      "28": { initials: "B.H.", person: "Brock Harrison", action: "hurling open weighted", object: "rock Onix Poké Ball", pq: "Brock (Pokémon)", wiki_slug: "Brock_(Pokémon)", aq: "throwing ball catch", oq: "Poké Ball" },
+      "29": { initials: "B.N.", person: "Bill Nye", action: "boiling bubbling acid in", object: "smoking Erlenmeyer flask", pq: "Bill Nye", wiki_slug: "Bill_Nye", aq: "bubbling boiling chemical", oq: "Erlenmeyer flask" },
+      "30": { initials: "C.O.", person: "Conan O'Brien", action: "dancing atop", object: "talk show desk", pq: "Conan O'Brien", wiki_slug: "Conan_O'Brien", aq: "tap dancing crazy", oq: "Desk" },
+      "31": { initials: "C.A.", person: "Captain America", action: "ricocheting vibranium rim of", object: "star-spangled shield", pq: "Captain America", wiki_slug: "Captain_America", aq: "shield throw bounce", oq: "Captain America's shield" },
+      "32": { initials: "C.B.", person: "Charlie Brown", action: "whiffing kick and flipping over", object: "spinning football", pq: "Charlie Brown", wiki_slug: "Charlie_Brown", aq: "kicking football miss fall", oq: "Football (ball)" },
+      "33": { initials: "C.C.", person: "Charlie Chaplin", action: "hooking neck with", object: "curved bamboo cane", pq: "Charlie Chaplin", wiki_slug: "Charlie_Chaplin", aq: "cane twirl hook", oq: "Walking stick" },
+      "34": { initials: "C.D.", person: "Charles Darwin", action: "dissecting finch in", object: "leather field journal", pq: "Charles Darwin", wiki_slug: "Charles_Darwin", aq: "magnifying glass examining", oq: "Diary" },
+      "35": { initials: "C.E.", person: "Chris Evans", action: "hurling spinning edge of", object: "vibranium shield", pq: "Chris Evans (actor)", wiki_slug: "Chris_Evans_(actor)", aq: "spinning shield hurling", oq: "Shield" },
+      "36": { initials: "C.S.", person: "Carmen Sandiego", action: "vanishing into thin air wearing", object: "ruby red fedora and trenchcoat", pq: "Carmen Sandiego", wiki_slug: "Carmen_Sandiego", aq: "smoke vanishing disappearing", oq: "Fedora" },
+      "37": { initials: "C.G.", person: "Che Guevara", action: "burning tip of", object: "rolled military cigar", pq: "Che Guevara", wiki_slug: "Che_Guevara", aq: "lighting cigar smoke", oq: "Cigar" },
+      "38": { initials: "C.H.", person: "Chris Hemsworth", action: "crushing skull with", object: "electrified Mjolnir hammer", pq: "Chris Hemsworth", wiki_slug: "Chris_Hemsworth", aq: "lightning hammer smash", oq: "Mjölnir" },
+      "39": { initials: "C.N.", person: "Chuck Norris", action: "roundhouse kicking through", object: "heavy punching bag", pq: "Chuck Norris", wiki_slug: "Chuck_Norris", aq: "roundhouse kick martial arts", oq: "Punching bag" },
+      "40": { initials: "D.O.", person: "Doc Ock", action: "crushing yellow cab with", object: "mechanical steel tentacles", pq: "Doctor Octopus", wiki_slug: "Doctor_Octopus", aq: "tentacles crushing car", oq: "Taxicab" },
+      "41": { initials: "D.A.", person: "David Attenborough", action: "stalking through jungle behind", object: "telephoto wildlife camera", pq: "David Attenborough", wiki_slug: "David_Attenborough", aq: "wildlife camera creeping", oq: "Camera lens" },
+      "42": { initials: "D.B.", person: "David Blaine", action: "levitating suspended inside", object: "sealed water tank", pq: "David Blaine", wiki_slug: "David_Blaine", aq: "water tank escape", oq: "Aquarium" },
+      "43": { initials: "D.C.", person: "Dave Chappelle", action: "smashing over head", object: "yellow comedy brick", pq: "Dave Chappelle", wiki_slug: "Dave_Chappelle", aq: "smashing brick", oq: "Brick" },
+      "44": { initials: "D.D.", person: "Danny DeVito", action: "clattering loudly with", object: "dented trash can lid", pq: "Danny DeVito", wiki_slug: "Danny_DeVito", aq: "trash can lid banging", oq: "Trash can lid" },
+      "45": { initials: "D.E.", person: "Dwight Eisenhower", action: "stabbing dagger into", object: "WWII war map", pq: "Dwight D. Eisenhower", wiki_slug: "Dwight_D._Eisenhower", aq: "stabbing knife map", oq: "Map" },
+      "46": { initials: "D.S.", person: "Darth Sidious", action: "blasting purple Force lightning from", object: "hooded Sith throne", pq: "Palpatine", wiki_slug: "Palpatine", aq: "force lightning purple", oq: "Throne" },
+      "47": { initials: "D.G.", person: "Donald Glover", action: "executing firing squad choreography in", object: "red choir robe", pq: "Donald Glover", wiki_slug: "Donald_Glover", aq: "firing gun dance", oq: "Robe" },
+      "48": { initials: "D.H.", person: "David Hasselhoff", action: "dragging through waves", object: "orange rescue buoy", pq: "David Hasselhoff", wiki_slug: "David_Hasselhoff", aq: "slow motion running beach", oq: "Lifebuoy" },
+      "49": { initials: "D.N.", person: "Robert De Niro", action: "shattering into pieces", object: "taxi cab windshield", pq: "Robert De Niro", wiki_slug: "Robert_De_Niro", aq: "baseball bat smashing glass", oq: "Windshield" },
+      "50": { initials: "E.O.", person: "Elizabeth Olsen", action: "telekinetically crushing with", object: "scarlet tiara", pq: "Elizabeth Olsen", wiki_slug: "Elizabeth_Olsen", aq: "red magic telekinesis", oq: "Tiara" },
+      "51": { initials: "E.A.", person: "Edgar Allan Poe", action: "stabbing quill through", object: "screeching black raven", pq: "Edgar Allan Poe", wiki_slug: "Edgar_Allan_Poe", aq: "stabbing feather quill", oq: "Common raven" },
+      "52": { initials: "E.B.", person: "Emily Blunt", action: "parachuting with", object: "talking parrot umbrella", pq: "Emily Blunt", wiki_slug: "Emily_Blunt", aq: "floating down umbrella", oq: "Umbrella" },
+      "53": { initials: "E.C.", person: "Emilia Clarke", action: "commanding 'Dracarys' holding", object: "scaled petrified dragon egg", pq: "Emilia Clarke", wiki_slug: "Emilia_Clarke", aq: "dragon fire command", oq: "Dragon egg" },
+      "54": { initials: "E.D.", person: "Ellen DeGeneres", action: "tap-dancing holes through", object: "glass coffee table", pq: "Ellen DeGeneres", wiki_slug: "Ellen_DeGeneres", aq: "tap dance jump table", oq: "Coffee table" },
+      "55": { initials: "E.E.", person: "Ed, Edd n Eddy", action: "greedily chomping gigantic", object: "multicolored jawbreaker", pq: "Ed, Edd n Eddy", wiki_slug: "Ed,_Edd_n_Eddy", aq: "eating jawbreaker candy", oq: "Jawbreaker (candy)" },
+      "56": { initials: "E.S.", person: "Ebenezer Scrooge", action: "hoarding gold sovereigns in", object: "iron cash lockbox", pq: "Ebenezer Scrooge", wiki_slug: "Ebenezer_Scrooge", aq: "counting gold coins", oq: "Safe" },
+      "57": { initials: "E.G.", person: "Ellie Goulding", action: "blinding with beams of", object: "mirror prism", pq: "Ellie Goulding", wiki_slug: "Ellie_Goulding", aq: "prism light laser beam", oq: "Prism" },
+      "58": { initials: "E.H.", person: "Edward Hyde", action: "drinking bubbling green potion from", object: "cracked glass beaker", pq: "Strange Case of Dr Jekyll and Mr Hyde", wiki_slug: "Strange_Case_of_Dr_Jekyll_and_Mr_Hyde", aq: "drinking potion chug", oq: "Beaker (laboratory equipment)" },
+      "59": { initials: "E.N.", person: "Edward Norton", action: "punching tooth out with", object: "pink soap bar", pq: "Edward Norton", wiki_slug: "Edward_Norton", aq: "punching face fight", oq: "Soap" },
+      "60": { initials: "S.O.", person: "Shaquille O'Neal", action: "shattering backboard with", object: "pressurized basketball", pq: "Shaquille O'Neal", wiki_slug: "Shaquille_O'Neal", aq: "slam dunk backboard", oq: "Basketball" },
+      "61": { initials: "S.A.", person: "Sheriff Andy", action: "strimming porch guitar wearing", object: "silver sheriff star badge", pq: "Andy Griffith", wiki_slug: "Andy_Griffith", aq: "strumming acoustic guitar", oq: "Sheriff badge" },
+      "62": { initials: "S.B.", person: "Sirius Black", action: "breaking free from", object: "iron Azkaban shackles", pq: "Sirius Black", wiki_slug: "Sirius_Black", aq: "snapping iron chains", oq: "Shackle" },
+      "63": { initials: "S.C.", person: "Santa Claus", action: "sliding down sooty chimney carrying", object: "giant red velvet toy sack", pq: "Santa Claus", wiki_slug: "Santa_Claus", aq: "sliding down chimney", oq: "Sack" },
+      "64": { initials: "S.D.", person: "Snoop Dogg", action: "torching burning tip of", object: "green rolled blunt", pq: "Snoop Dogg", wiki_slug: "Snoop_Dogg", aq: "lighting flame smoke", oq: "Cigarette" },
+      "65": { initials: "S.E.", person: "Erza Scarlet", action: "requipping and dual-wielding", object: "magic celestial broadswords", pq: "Fairy Tail", wiki_slug: "Fairy_Tail", aq: "dual sword slashing", oq: "Broadsword" },
+      "66": { initials: "S.S.", person: "Sylvester Stallone", action: "pulverizing frozen beef with", object: "bloody hand wraps", pq: "Sylvester Stallone", wiki_slug: "Sylvester_Stallone", aq: "punching meat boxing", oq: "Hand wrap" },
+      "67": { initials: "S.G.", person: "Speedy Gonzales", action: "zooming sonic dashes kicking", object: "oversized yellow sombrero", pq: "Speedy Gonzales", wiki_slug: "Speedy_Gonzales", aq: "super speed running", oq: "Sombrero" },
+      "68": { initials: "S.H.", person: "Stephen Hawking", action: "firing voice synthesizer from", object: "robotic wheelchair", pq: "Stephen Hawking", wiki_slug: "Stephen_Hawking", aq: "electric wheelchair moving", oq: "Motorized wheelchair" },
+      "69": { initials: "S.N.", person: "Sam Neill", action: "waving blinding glare of", object: "red road flare", pq: "Sam Neill", wiki_slug: "Sam_Neill", aq: "waving red road flare", oq: "Flare" },
+      "70": { initials: "G.O.", person: "George Orwell", action: "drafting 1984 underneath", object: "glowing Big Brother telescreen", pq: "George Orwell", wiki_slug: "George_Orwell", aq: "typewriter typing screen", oq: "Television" },
+      "71": { initials: "G.A.", person: "Gomez Addams", action: "passionately lunging with", object: "silver fencing foil", pq: "Gomez Addams", wiki_slug: "Gomez_Addams", aq: "fencing sword duel", oq: "Foil (fencing)" },
+      "72": { initials: "G.B.", person: "Gerard Butler", action: "spartan-kicking deep into", object: "bottomless pit", pq: "Gerard Butler", wiki_slug: "Gerard_Butler", aq: "spartan kick", oq: "Pit" },
+      "73": { initials: "G.C.", person: "George Clooney", action: "drilling through vault of", object: "Bellagio casino chips", pq: "George Clooney", wiki_slug: "George_Clooney", aq: "drilling bank vault", oq: "Casino token" },
+      "74": { initials: "G.D.", person: "Gabrielle Delacour", action: "floating underwater inside", object: "glowing bubble-head charm", pq: "Fleur Delacour", wiki_slug: "Fleur_Delacour", aq: "underwater bubble swimming", oq: "Underwater" },
+      "75": { initials: "G.E.", person: "Gustave Eiffel", action: "riveting wrought-iron truss of", object: "Eiffel Tower girder", pq: "Gustave Eiffel", wiki_slug: "Gustave_Eiffel", aq: "hammering hot iron rivet", oq: "Eiffel Tower" },
+      "76": { initials: "G.S.", person: "Gary the Snail", action: "meowing and leaving slime trail on", object: "red snail food bowl", pq: "Gary the Snail", wiki_slug: "Gary_the_Snail", aq: "snail slithering slime", oq: "Pet food bowl" },
+      "77": { initials: "G.G.", person: "Ginger Grant", action: "posing glamour shots in", object: "sparkling sequin evening gown", pq: "Gilligan's Island", wiki_slug: "Gilligan's_Island", aq: "glamour posing flashing", oq: "Evening gown" },
+      "78": { initials: "G.H.", person: "Gregory House", action: "popping Vicodin pills leaning on", object: "flame-painted walking cane", pq: "Gregory House", wiki_slug: "Gregory_House", aq: "swallowing pill cane", oq: "Walking cane" },
+      "79": { initials: "G.N.", person: "Graham Norton", action: "pulling trapdoor lever on", object: "red ejection chair", pq: "Graham Norton", wiki_slug: "Graham_Norton", aq: "pulling lever trapdoor", oq: "Ejection seat" },
+      "80": { initials: "H.O.", person: "Harry Osborn", action: "surfing skies throwing pumpkin bombs from", object: "green goblin glider", pq: "Harry Osborn", wiki_slug: "Harry_Osborn", aq: "flying glider throwing bomb", oq: "Glider" },
+      "81": { initials: "H.A.", person: "Hey Arnold", action: "wearing small blue cap clicking", object: "skylight bedroom remote", pq: "Hey Arnold!", wiki_slug: "Hey_Arnold!", aq: "remote control clicking", oq: "Remote control" },
+      "82": { initials: "H.B.", person: "Helluva Boss Blitzo", action: "blasting demonic portals with", object: "Stolas's ancient Grimoire", pq: "Helluva Boss", wiki_slug: "Helluva_Boss", aq: "portal opening magic blast", oq: "Book" },
+      "83": { initials: "H.C.", person: "Henry Cavill", action: "punching sonic-boom through", object: "crimson Superman cape", pq: "Henry Cavill", wiki_slug: "Henry_Cavill", aq: "superman sonic punch", oq: "Cape" },
+      "84": { initials: "H.D.", person: "Harvey Dent", action: "flipping scratched two-headed", object: "silver dollar coin", pq: "Two-Face", wiki_slug: "Two-Face", aq: "coin flip catch", oq: "Silver dollar" },
+      "85": { initials: "H.E.", person: "Hugh Everett", action: "splitting multiverse dimensions on", object: "quantum branch", pq: "Hugh Everett III", wiki_slug: "Hugh_Everett_III", aq: "multiverse branching split", oq: "Fractal" },
+      "86": { initials: "H.S.", person: "Homer Simpson", action: "drooling noisily over", object: "giant pink frosted sprinkle donut", pq: "Homer Simpson", wiki_slug: "Homer_Simpson", aq: "homer drooling donut", oq: "Doughnut" },
+      "87": { initials: "H.G.", person: "Hermione Granger", action: "spinning golden hourglass rings of", object: "Time-Turner necklace", pq: "Hermione Granger", wiki_slug: "Hermione_Granger", aq: "spinning hourglass necklace", oq: "Hourglass" },
+      "88": { initials: "H.H.", person: "Hulk Hogan", action: "tearing across chest", object: "yellow Hulkamania tank top", pq: "Hulk Hogan", wiki_slug: "Hulk_Hogan", aq: "shirt ripping chest flex", oq: "Sleeveless shirt" },
+      "89": { initials: "H.N.", person: "Hank Norris", action: "snapping board with", object: "black martial arts belt", pq: "Chuck Norris", wiki_slug: "Chuck_Norris", aq: "karate chop breaking board", oq: "Black belt (martial arts)" },
+      "90": { initials: "N.O.", person: "Norman Osborn", action: "cackling maniacally throwing", object: "explosive pumpkin bomb", pq: "Green Goblin", wiki_slug: "Green_Goblin", aq: "cackling throwing pumpkin bomb", oq: "Bomb" },
+      "91": { initials: "N.A.", person: "Neil Armstrong", action: "driving titanium pole into", object: "grey lunar soil", pq: "Neil Armstrong", wiki_slug: "Neil_Armstrong", aq: "planting flag astronaut", oq: "Lunar soil" },
+      "92": { initials: "N.B.", person: "Norman Bates", action: "stabbing repeatedly through", object: "bloody motel shower curtain", pq: "Norman Bates", wiki_slug: "Norman_Bates", aq: "psycho shower stabbing", oq: "Shower curtain" },
+      "93": { initials: "N.C.", person: "Nicolas Cage", action: "torching parchment of", object: "Declaration of Independence", pq: "Nicolas Cage", wiki_slug: "Nicolas_Cage", aq: "torch fire burning parchment", oq: "United States Declaration of Independence" },
+      "94": { initials: "N.D.", person: "Neil deGrasse Tyson", action: "spinning until it bursts", object: "glowing celestial cosmos globe", pq: "Neil deGrasse Tyson", wiki_slug: "Neil_deGrasse_Tyson", aq: "spinning cosmos galaxy globe", oq: "Celestial globe" },
+      "95": { initials: "N.E.", person: "Nina Einstein", action: "assembling Fleija warhead into", object: "radioactive Sakuradite reactor", pq: "Code Geass", wiki_slug: "Code_Geass", aq: "assembling warhead lab", oq: "Nuclear weapon" },
+      "96": { initials: "N.S.", person: "Ned Stark", action: "executing traitor with", object: "Valyrian greatsword Ice", pq: "Ned Stark", wiki_slug: "Ned_Stark", aq: "beheading sword execution", oq: "Greatsword" },
+      "97": { initials: "N.G.", person: "Newt Gingrich", action: "slamming legislative gavel onto", object: "Contract with America docket", pq: "Newt Gingrich", wiki_slug: "Newt_Gingrich", aq: "gavel slam wood", oq: "Gavel" },
+      "98": { initials: "N.H.", person: "Neil Patrick Harris", action: "setting ablaze deck of", object: "playing cards", pq: "Neil Patrick Harris", wiki_slug: "Neil_Patrick_Harris", aq: "magic card flourish fire", oq: "Playing card" },
+      "99": { initials: "N.N.", person: "Naomi Novik", action: "buckling aerial harness onto", object: "dragon flight saddle", pq: "Naomi Novik", wiki_slug: "Naomi_Novik", aq: "strapping flight saddle", oq: "Saddle" }
+    };
+
+    let deck = {};
+    const imgCache = JSON.parse(localStorage.getItem("pao_img_cache_v4") || "{}");
+
+    function saveCache() {
+      try {
+        localStorage.setItem("pao_img_cache_v4", JSON.stringify(imgCache));
+      } catch (e) {
+        console.warn("Local storage cache limit reached.");
+      }
+    }
+
+    function initDeck() {
+      const CURRENT_VERSION = "pao_deck_v20";
+      const stored = localStorage.getItem(CURRENT_VERSION) || localStorage.getItem("pao_deck_v19");
+      if (stored) {
+        try {
+          deck = JSON.parse(stored);
+        } catch (e) {
+          deck = JSON.parse(JSON.stringify(DEFAULT_MASTER_DECK));
+        }
+      } else {
+        deck = JSON.parse(JSON.stringify(DEFAULT_MASTER_DECK));
+      }
+
+      // Enforce the exact canonical Person, Action, Object, and Initials across all 100 entries
+      Object.keys(DEFAULT_MASTER_DECK).forEach(k => {
+        if (!deck[k]) {
+          deck[k] = JSON.parse(JSON.stringify(DEFAULT_MASTER_DECK[k]));
+        } else {
+          deck[k].person = DEFAULT_MASTER_DECK[k].person;
+          deck[k].action = DEFAULT_MASTER_DECK[k].action;
+          deck[k].object = DEFAULT_MASTER_DECK[k].object;
+          deck[k].initials = DEFAULT_MASTER_DECK[k].initials;
+          deck[k].wiki_slug = DEFAULT_MASTER_DECK[k].wiki_slug;
+          deck[k].pq = DEFAULT_MASTER_DECK[k].pq;
+          deck[k].aq = DEFAULT_MASTER_DECK[k].aq;
+          deck[k].oq = DEFAULT_MASTER_DECK[k].oq;
+        }
+        if (deck[k].weight === undefined) deck[k].weight = 1.0;
+        if (deck[k].misses === undefined) deck[k].misses = 0;
+        if (deck[k].reviews === undefined) deck[k].reviews = 0;
+      });
+      saveDeck();
+    }
+
+    function saveDeck() {
+      localStorage.setItem("pao_deck_v20", JSON.stringify(deck));
+    }
+
+    let useLavaRng = localStorage.getItem("pao_use_lava_rng") === "true";
+    let lavaEntropyPool = new Uint8Array(32);
+
+    class LavaLampSim {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext("2d");
+        this.blobs = [];
+        this.numBlobs = 7;
+        for (let i = 0; i < this.numBlobs; i++) {
+          this.blobs.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.8,
+            vy: (Math.random() - 0.5) * 1.5,
+            r: 16 + Math.random() * 20,
+            temp: Math.random()
+          });
+        }
+      }
+
+      update() {
+        const w = this.canvas.width;
+        const h = this.canvas.height;
+        this.ctx.fillStyle = "#120502";
+        this.ctx.fillRect(0, 0, w, h);
+
+        for (let i = 0; i < this.blobs.length; i++) {
+          const b = this.blobs[i];
+          b.y += b.vy;
+          b.x += b.vx;
+
+          if (b.y < 30) b.vy += 0.04;
+          if (b.y > h - 30) b.vy -= 0.04;
+          if (b.x < 15 || b.x > w - 15) b.vx *= -1;
+
+          const grad = this.ctx.createRadialGradient(b.x, b.y, b.r * 0.2, b.x, b.y, b.r);
+          grad.addColorStop(0, "#fb923c");
+          grad.addColorStop(0.6, "#ea580c");
+          grad.addColorStop(1, "rgba(180, 40, 10, 0)");
+
+          this.ctx.fillStyle = grad;
+          this.ctx.beginPath();
+          this.ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+          this.ctx.fill();
+        }
+
+        if (Math.random() < 0.2) {
+          try {
+            const p = this.ctx.getImageData(Math.floor(w/2), Math.floor(h/2), 4, 4).data;
+            for (let j = 0; j < 16; j++) {
+              lavaEntropyPool[j] ^= p[j];
+            }
+            const hashDisp = document.getElementById("lava-hash-disp");
+            if (hashDisp) {
+              hashDisp.innerText = Array.from(lavaEntropyPool.slice(0, 16)).map(x => x.toString(16).padStart(2,'0')).join('');
+            }
+          } catch(e){}
+        }
+      }
+    }
+
+    let lavaSimInstance = null;
+    function initLavaLamp() {
+      const c = document.getElementById("lava-canvas");
+      if (c) {
+        lavaSimInstance = new LavaLampSim(c);
+        function loop() {
+          lavaSimInstance.update();
+          requestAnimationFrame(loop);
+        }
+        loop();
+      }
+    }
+
+    function getNextRandom() {
+      if (!useLavaRng) return Math.random();
+      const buf = new Uint32Array(1);
+      window.crypto.getRandomValues(buf);
+      const fluidSeed = (lavaEntropyPool[0] << 24) ^ (lavaEntropyPool[1] << 16) ^ (lavaEntropyPool[2] << 8) ^ lavaEntropyPool[3];
+      const combined = (buf[0] ^ fluidSeed) >>> 0;
+      return combined / 4294967296;
+    }
+
+    let audioCtx = null;
+    let isMuted = localStorage.getItem("pao_muted") === "true";
+
+    function playTone(freq, type = "sine", duration = 0.15) {
+      if (isMuted) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playSuccessSound() {
+      playTone(523.25, "triangle", 0.12);
+      setTimeout(() => playTone(659.25, "triangle", 0.18), 90);
+    }
+
+    function playMistakeSound() {
+      playTone(185, "sawtooth", 0.25);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.innerText = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2400);
+    }
+
+    const GIPHY_KEYS = [
+      'sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh',
+      'dc6zaTOxFJmzC',
+      '56JuGI3nd4wNoVJFDqiYsQYr9n8Tm5Vh',
+      'GlVGYHkr3WSBnllca54iODA2916GFq6P'
+    ];
+
+    async function queryGiphyGifs(term) {
+      if (!term) return [];
+      const cleanTerm = term.trim().replace(/[^\w\s-]/g, ' ');
+      const searchTerms = [cleanTerm];
+      const words = cleanTerm.split(/\s+/).filter(w => w.length > 2);
+      if (words.length > 2) {
+        searchTerms.push(words.slice(0, 2).join(' '));
+        searchTerms.push(words[0]);
+      }
+
+      for (const q of searchTerms) {
+        for (const key of GIPHY_KEYS) {
+          try {
+            const url = `https://api.giphy.com/v1/gifs/search?api_key=${key}&q=${encodeURIComponent(q)}&limit=12&rating=pg-13`;
+            const res = await fetch(url);
+            if (res.ok) {
+              const data = await res.json();
+              if (data.data && data.data.length > 0) {
+                const results = data.data.map(item => {
+                  return (item.images && item.images.fixed_height && item.images.fixed_height.url) ||
+                         (item.images && item.images.downsized && item.images.downsized.url) ||
+                         (item.images && item.images.original && item.images.original.url);
+                }).filter(Boolean);
+                if (results.length > 0) return results;
+              }
+            }
+          } catch (e) {}
+        }
+      }
+      return [];
+    }
+
+    async function queryWikimediaCommons(term, isGifOnly = false) {
+      if (!term) return [];
+      try {
+        const qStr = isGifOnly ? `${term} filemime:image/gif` : term;
+        const commUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(qStr)}&gsrlimit=15&prop=imageinfo&iiprop=url|mime&iiurlwidth=400&format=json&origin=*`;
+        const res = await fetch(commUrl);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.query && data.query.pages) {
+            const list = Object.values(data.query.pages)
+              .sort((a, b) => (a.index || 0) - (b.index || 0))
+              .filter(p => p.imageinfo && p.imageinfo[0] && (p.imageinfo[0].thumburl || p.imageinfo[0].url))
+              .map(p => ({
+                url: p.imageinfo[0].thumburl || p.imageinfo[0].url,
+                mime: p.imageinfo[0].mime || ''
+              }));
+            if (isGifOnly) {
+              const gifs = list.filter(item => item.mime === 'image/gif' || item.url.toLowerCase().endsWith('.gif')).map(i => i.url);
+              if (gifs.length > 0) return gifs;
+            }
+            return list.map(i => i.url);
+          }
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    async function queryWikipediaSummary(slug) {
+      if (!slug) return null;
+      try {
+        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(slug)}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.originalimage && data.originalimage.source) {
+            return data.originalimage.source;
+          }
+          if (data.thumbnail && data.thumbnail.source) {
+            return data.thumbnail.source.replace(/\/\d+px-/, '/600px-');
+          }
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    async function queryWikipediaImages(term) {
+      if (!term) return [];
+      try {
+        const wikiUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(term)}&gsrlimit=12&prop=pageimages&pithumbsize=600&format=json&origin=*`;
+        const res = await fetch(wikiUrl);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.query && data.query.pages) {
+            return Object.values(data.query.pages)
+              .sort((a, b) => (a.index || 0) - (b.index || 0))
+              .filter(p => p.thumbnail && p.thumbnail.source)
+              .map(p => p.thumbnail.source);
+          }
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    async function queryOpenverse(term) {
+      if (!term) return [];
+      try {
+        const ovUrl = `https://api.openverse.org/v1/images/?format=json&q=${encodeURIComponent(term)}`;
+        const res = await fetch(ovUrl);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.results && data.results.length > 0) {
+            return data.results.map(r => r.url);
+          }
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    async function fetchImageFor(term, category = "general", offset = 0, wikiSlug = null) {
+      if (!term && !wikiSlug) return null;
+      const clean = (term || "").trim();
+      const cacheKey = `${category}_${clean.toLowerCase()}`;
+      if (offset === 0 && imgCache[cacheKey]) return imgCache[cacheKey];
+
+      if (offset === 0 && (wikiSlug || clean)) {
+        const summaryImg = await queryWikipediaSummary(wikiSlug || clean.replace(/\s+/g, '_'));
+        if (summaryImg) {
+          imgCache[cacheKey] = summaryImg;
+          saveCache();
+          return summaryImg;
+        }
+      }
+
+      const wikiRes = await queryWikipediaImages(clean);
+      if (wikiRes.length > offset) {
+        const picked = wikiRes[offset % wikiRes.length];
+        if (offset === 0) { imgCache[cacheKey] = picked; saveCache(); }
+        return picked;
+      }
+
+      const commRes = await queryWikimediaCommons(clean, false);
+      if (commRes.length > offset) {
+        const picked = commRes[offset % commRes.length];
+        if (offset === 0) { imgCache[cacheKey] = picked; saveCache(); }
+        return picked;
+      }
+
+      const ovRes = await queryOpenverse(clean);
+      if (ovRes.length > offset) {
+        const picked = ovRes[offset % ovRes.length];
+        if (offset === 0) { imgCache[cacheKey] = picked; saveCache(); }
+        return picked;
+      }
+
+      return null;
+    }
+
+    async function fetchGifFor(term, offset = 0) {
+      if (!term) return null;
+      const clean = term.trim();
+      const cacheKey = `action_gif_${clean.toLowerCase()}`;
+      if (offset === 0 && imgCache[cacheKey]) return imgCache[cacheKey];
+
+      const giphyResults = await queryGiphyGifs(clean);
+      if (giphyResults.length > offset) {
+        const picked = giphyResults[offset % giphyResults.length];
+        if (offset === 0) { imgCache[cacheKey] = picked; saveCache(); }
+        return picked;
+      }
+
+      const commGifs = await queryWikimediaCommons(clean, true);
+      if (commGifs.length > offset) {
+        const picked = commGifs[offset % commGifs.length];
+        if (offset === 0) { imgCache[cacheKey] = picked; saveCache(); }
+        return picked;
+      }
+
+      const stillFallback = await fetchImageFor(clean, "action", offset);
+      if (stillFallback) {
+        if (offset === 0) { imgCache[cacheKey] = stillFallback; saveCache(); }
+        return stillFallback;
+      }
+
+      return null;
+    }
+
+    async function applyImageToBox(boxEl, cardKey, part = "p", captionText = "", offset = 0) {
+      if (!boxEl) return;
+      boxEl.innerHTML = `<div class="spinner-sm"></div>`;
+      let finalUrl = null;
+      let isGif = false;
+
+      const card = deck[cardKey] || DEFAULT_MASTER_DECK[cardKey];
+      if (!card) return;
+
+      const globalDefault = localStorage.getItem("pao_global_action_mode") || "gif";
+      const cardActionMode = card.action_mode || globalDefault;
+
+      if (part === "p") {
+        finalUrl = (offset === 0 && card.p_img) ? card.p_img : await fetchImageFor(card.pq || card.person, "person", offset, card.wiki_slug);
+      } else if (part === "a") {
+        isGif = (cardActionMode === "gif");
+        if (isGif) {
+          finalUrl = (offset === 0 && card.a_gif) ? card.a_gif : await fetchGifFor(card.aq || card.action, offset);
+          if (!finalUrl) {
+            isGif = false;
+            finalUrl = (offset === 0 && card.a_pic) ? card.a_pic : await fetchImageFor(card.aq || card.action, "action", offset);
+          }
+        } else {
+          finalUrl = (offset === 0 && card.a_pic) ? card.a_pic : await fetchImageFor(card.aq || card.action, "action", offset);
+        }
+      } else if (part === "o") {
+        finalUrl = (offset === 0 && card.o_img) ? card.o_img : await fetchImageFor(card.oq || card.object, "object", offset);
+      }
+
+      boxEl.dataset.fullImg = finalUrl || "";
+      boxEl.dataset.caption = captionText || (part === 'p' ? card.person : (part === 'a' ? card.action : card.object));
+
+      if (finalUrl) {
+        boxEl.innerHTML = `
+          <img src="${finalUrl}" alt="Visual">
+          <div class="viewport-overlay-actions">
+            <button class="overlay-btn" onclick="event.stopPropagation(); reRollVisual('${cardKey}', '${part}', ${offset + 1})">🎲 Next</button>
+            <button class="overlay-btn" onclick="event.stopPropagation(); openFinderModal('${cardKey}', '${part}')">🔍 Source</button>
+            <button class="overlay-btn" onclick="event.stopPropagation(); openLightbox('${finalUrl}', '${encodeURIComponent(boxEl.dataset.caption)}')">Zoom</button>
+          </div>
+        `;
+
+        const imgEl = boxEl.querySelector('img');
+        if (imgEl) {
+          imgEl.onerror = async function() {
+            if (part === 'a' && isGif && !this.dataset.fallbackTried) {
+              this.dataset.fallbackTried = 'true';
+              const stillFallback = card.a_pic || await fetchImageFor(card.aq || card.action, "action");
+              if (stillFallback && stillFallback !== this.src) {
+                this.src = stillFallback;
+                boxEl.dataset.fullImg = stillFallback;
+                return;
+              }
+            }
+            this.onerror = null;
+            this.src = `https://placehold.co/400x300/0f172a/38bdf8?text=${encodeURIComponent(captionText || 'Visual')}`;
+          };
+        }
+      } else {
+        boxEl.innerHTML = `
+          <div class="placeholder-art">
+            <span class="glyph">${part === 'p' ? '👤' : (part === 'a' ? '⚡' : '📦')}</span>
+            <span>${captionText || 'No Visual'}</span>
+          </div>
+          <div class="viewport-overlay-actions" style="opacity:1;">
+            <button class="overlay-btn" onclick="event.stopPropagation(); openFinderModal('${cardKey}', '${part}')">🔍 Find Source</button>
+          </div>
+        `;
+      }
+    }
+
+    const SUITS = [
+      { name: "Spades", symbol: "♠", colorClass: "card-black", dominicLetter: "S", tensVal: 6 },
+      { name: "Clubs", symbol: "♣", colorClass: "card-black", dominicLetter: "C", tensVal: 3 },
+      { name: "Diamonds", symbol: "♦", colorClass: "card-red", dominicLetter: "D", tensVal: 4 },
+      { name: "Hearts", symbol: "♥", colorClass: "card-red", dominicLetter: "H", tensVal: 8 }
+    ];
+
+    const VALUES = [
+      { name: "A", val: 1, letter: "A" },
+      { name: "2", val: 2, letter: "B" },
+      { name: "3", val: 3, letter: "C" },
+      { name: "4", val: 4, letter: "D" },
+      { name: "5", val: 5, letter: "E" },
+      { name: "6", val: 6, letter: "S" },
+      { name: "7", val: 7, letter: "G" },
+      { name: "8", val: 8, letter: "H" },
+      { name: "9", val: 9, letter: "N" },
+      { name: "10", val: 0, letter: "O" },
+      { name: "J", val: "J", letter: "J" },
+      { name: "Q", val: "Q", letter: "Q" },
+      { name: "K", val: "K", letter: "K" }
+    ];
+
+    const COURT_MAP = {
+      "JS": "01", "QS": "10", "KS": "65",
+      "JC": "11", "QC": "77", "KC": "31",
+      "JD": "12", "QD": "57", "KD": "75",
+      "JH": "81", "QH": "87", "KH": "88"
+    };
+
+    function cardToPaoCode(suitObj, valObj) {
+      if (valObj.name === "J" || valObj.name === "Q" || valObj.name === "K") {
+        return COURT_MAP[`${valObj.name}${suitObj.dominicLetter}`] || "00";
+      }
+      return `${valObj.val}${suitObj.tensVal}`;
+    }
+
+    let fullCardsQueue = [];
+    let curStationIdx = 0;
+    let deckTimerInterval = null;
+    let deckTimerStartTime = 0;
+    let deckTimerElapsed = 0;
+    let deckIsTiming = false;
+
+    function buildStandard52Deck() {
+      const singleDeck = [];
+      SUITS.forEach(s => {
+        VALUES.forEach(v => {
+          const paoCode = cardToPaoCode(s, v);
+          const initStr = `${v.letter}.${s.dominicLetter}.`;
+          singleDeck.push({
+            suit: s.symbol,
+            suitName: s.name,
+            colorClass: s.colorClass,
+            value: v.name,
+            code: `${v.name}${s.symbol}`,
+            paoCode: paoCode,
+            initials: initStr
+          });
+        });
+      });
+      return singleDeck;
+    }
+
+    function shuffleFullDecks(numDecks) {
+      numDecks = Math.max(1, Math.min(1000, numDecks));
+      fullCardsQueue = [];
+      const base = buildStandard52Deck();
+      for (let i = 0; i < numDecks; i++) {
+        fullCardsQueue.push(...JSON.parse(JSON.stringify(base)));
+      }
+
+      for (let i = fullCardsQueue.length - 1; i > 0; i--) {
+        const j = Math.floor(getNextRandom() * (i + 1));
+        [fullCardsQueue[i], fullCardsQueue[j]] = [fullCardsQueue[j], fullCardsQueue[i]];
+      }
+
+      curStationIdx = 0;
+      resetDeckTimer();
+      updateDeckMemorizerUI();
+      buildCardReferenceTable();
+      showToast(`Dealt ${numDecks} deck(s) (${fullCardsQueue.length.toLocaleString()} cards) across ${Math.ceil(fullCardsQueue.length / 3).toLocaleString()} stations!`);
+    }
+
+    function startDeckTimer() {
+      if (deckIsTiming) return;
+      deckIsTiming = true;
+      deckTimerStartTime = performance.now() - deckTimerElapsed;
+      deckTimerInterval = setInterval(() => {
+        deckTimerElapsed = performance.now() - deckTimerStartTime;
+        renderTimerDisplay();
+      }, 100);
+      document.getElementById("deck-btn-timer-toggle").innerText = "⏸ Pause Timer";
+    }
+
+    function pauseDeckTimer() {
+      if (!deckIsTiming) return;
+      deckIsTiming = false;
+      clearInterval(deckTimerInterval);
+      document.getElementById("deck-btn-timer-toggle").innerText = "▶ Resume Timer";
+    }
+
+    function resetDeckTimer() {
+      pauseDeckTimer();
+      deckTimerElapsed = 0;
+      renderTimerDisplay();
+      document.getElementById("deck-btn-timer-toggle").innerText = "▶ Start Timer";
+    }
+
+    function renderTimerDisplay() {
+      const totalSec = Math.floor(deckTimerElapsed / 1000);
+      const mins = Math.floor(totalSec / 60);
+      const secs = totalSec % 60;
+      const tenths = Math.floor((deckTimerElapsed % 1000) / 100);
+      const disp = `⏱️ ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}.${tenths}`;
+      const el = document.getElementById("deck-timer-display");
+      if (el) el.innerText = disp;
+    }
+
+    document.getElementById("deck-btn-timer-toggle").onclick = () => {
+      if (deckIsTiming) pauseDeckTimer();
+      else startDeckTimer();
+    };
+
+    function updateDeckMemorizerUI() {
+      if (fullCardsQueue.length === 0) return;
+      const totalStations = Math.ceil(fullCardsQueue.length / 3);
+      curStationIdx = Math.max(0, Math.min(totalStations - 1, curStationIdx));
+
+      document.getElementById("deck-cur-station").innerText = (curStationIdx + 1).toLocaleString();
+      document.getElementById("deck-total-stations").innerText = totalStations.toLocaleString();
+      document.getElementById("deck-total-cards").innerText = fullCardsQueue.length.toLocaleString();
+
+      const startCard = curStationIdx * 3;
+      const endCard = Math.min(fullCardsQueue.length, startCard + 3);
+      const cardsInStation = fullCardsQueue.slice(startCard, endCard);
+
+      document.getElementById("deck-card-range").innerText = `${(startCard + 1).toLocaleString()}–${endCard.toLocaleString()}`;
+
+      const ruleTag = document.getElementById("deck-station-rule-tag");
+      if (cardsInStation.length === 3) {
+        ruleTag.innerText = "Standard Triad (3 Cards: Person + Action + Object)";
+      } else if (cardsInStation.length === 1) {
+        ruleTag.innerText = "Station 18 Anchor (Final 52nd Card: Person Identity)";
+      } else {
+        ruleTag.innerText = `Locus Station (${cardsInStation.length} Cards)`;
+      }
+
+      const container = document.getElementById("deck-cards-container");
+      container.innerHTML = cardsInStation.map((c, i) => `
+        <div class="playing-card ${c.colorClass}">
+          <div class="card-corner">
+            <span class="val">${c.value}</span>
+            <span class="suit">${c.suit}</span>
+          </div>
+          <div class="card-center-suit">${c.suit}</div>
+          <div class="card-corner bottom-corner">
+            <span class="val">${c.value}</span>
+            <span class="suit">${c.suit}</span>
+          </div>
+          <div class="card-mapping-tag">${i === 0 ? '1. Person' : (i === 1 ? '2. Action' : '3. Object')} [${c.paoCode}]</div>
+        </div>
+      `).join("");
+
+      const c1 = cardsInStation[0];
+      const c2 = cardsInStation[1] || c1;
+      const c3 = cardsInStation[2] || c2;
+
+      const cardP = deck[c1.paoCode] || DEFAULT_MASTER_DECK[c1.paoCode];
+      const cardA = deck[c2.paoCode] || DEFAULT_MASTER_DECK[c2.paoCode];
+      const cardO = deck[c3.paoCode] || DEFAULT_MASTER_DECK[c3.paoCode];
+
+      document.getElementById("deck-p-code").innerText = `[${c1.paoCode}]`;
+      document.getElementById("deck-o-code").innerText = cardsInStation.length >= 3 ? `[${c3.paoCode}]` : `[-]`;
+
+      document.getElementById("deck-p-name").innerText = cardP.person;
+      document.getElementById("deck-a-name").innerText = cardsInStation.length >= 2 ? cardA.action : "---";
+      document.getElementById("deck-o-name").innerText = cardsInStation.length >= 3 ? cardO.object : "---";
+
+      applyImageToBox(document.getElementById("deck-p-img"), c1.paoCode, "p", cardP.person);
+      if (cardsInStation.length >= 2) applyImageToBox(document.getElementById("deck-a-img"), c2.paoCode, "a", cardA.action);
+      else document.getElementById("deck-a-img").innerHTML = `<div class="placeholder-art"><span class="glyph">⚡</span><span>No Action</span></div>`;
+
+      if (cardsInStation.length >= 3) applyImageToBox(document.getElementById("deck-o-img"), c3.paoCode, "o", cardO.object);
+      else document.getElementById("deck-o-img").innerHTML = `<div class="placeholder-art"><span class="glyph">📦</span><span>No Object</span></div>`;
+
+      const storyBanner = document.getElementById("deck-story-banner");
+      if (storyBanner) {
+        if (cardsInStation.length >= 3) {
+          storyBanner.innerHTML = `<strong>Synthesized Mental Story:</strong> <span style="color:var(--person-color); font-weight:700;">${cardP.person}</span> is <span style="color:var(--action-color); font-weight:700;">${cardA.action}</span> the <span style="color:var(--object-color); font-weight:700;">${cardO.object}</span>.`;
+        } else if (cardsInStation.length === 2) {
+          storyBanner.innerHTML = `<strong>Synthesized Mental Story:</strong> <span style="color:var(--person-color); font-weight:700;">${cardP.person}</span> is <span style="color:var(--action-color); font-weight:700;">${cardA.action}</span>.`;
+        } else {
+          storyBanner.innerHTML = `<strong>Anchor Card (Station 18):</strong> <span style="color:var(--person-color); font-weight:700;">${cardP.person}</span> standing as the final anchor of the deck.`;
+        }
+      }
+    }
+
+    function buildCardReferenceTable() {
+      const tbody = document.getElementById("deck-ref-tbody");
+      if (!tbody) return;
+      const base = buildStandard52Deck();
+      tbody.innerHTML = base.map(c => {
+        const d = deck[c.paoCode] || DEFAULT_MASTER_DECK[c.paoCode];
+        return `
+          <tr>
+            <td><strong class="${c.colorClass === 'card-red' ? 'text-danger' : ''}">${c.value}${c.suit}</strong></td>
+            <td class="mono">${c.initials}</td>
+            <td class="mono" style="color:var(--accent);">[${c.paoCode}]</td>
+            <td style="color:var(--person-color);">${d.person}</td>
+            <td style="color:var(--action-color);">${d.action}</td>
+            <td style="color:var(--object-color);">${d.object}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    document.getElementById("deck-btn-show-mapping").onclick = () => {
+      buildCardReferenceTable();
+      document.getElementById("deck-mapping-modal").classList.add("active");
+    };
+
+    document.getElementById("deck-btn-jump").onclick = () => {
+      const val = parseInt(document.getElementById("deck-jump-station-in").value) || 1;
+      curStationIdx = val - 1;
+      updateDeckMemorizerUI();
+    };
+
+    document.getElementById("deck-btn-switch-phase").onclick = () => {
+      pauseDeckTimer();
+      document.getElementById("deck-phase-memorize-box").style.display = "none";
+      document.getElementById("deck-phase-recall-box").style.display = "block";
+
+      const totalStations = Math.ceil(fullCardsQueue.length / 3);
+      const grid = document.getElementById("deck-recall-stations-grid");
+      grid.innerHTML = "";
+
+      for (let st = 0; st < totalStations; st++) {
+        const startCard = st * 3;
+        const countInSt = Math.min(fullCardsQueue.length, startCard + 3) - startCard;
+        const row = document.createElement("div");
+        row.style.cssText = "display:flex; align-items:center; gap:0.75rem; background:#0b1120; padding:0.5rem 0.75rem; border-radius:6px; border:1px solid var(--border);";
+        row.innerHTML = `
+          <div style="width:110px; font-weight:700; font-size:0.8rem; color:var(--accent);">Station ${st + 1} (${countInSt} cards):</div>
+          <input type="text" id="deck-rec-in-${st}" placeholder="e.g. AS, 4D, 10C or 16-44-03" style="flex-grow:1; font-size:0.82rem; padding:0.35rem 0.6rem;">
+        `;
+        grid.appendChild(row);
+      }
+    };
+
+    document.getElementById("deck-btn-exit-recall").onclick = () => {
+      document.getElementById("deck-phase-recall-box").style.display = "none";
+      document.getElementById("deck-phase-memorize-box").style.display = "block";
+    };
+
+    document.getElementById("deck-btn-submit-recall").onclick = () => {
+      const totalStations = Math.ceil(fullCardsQueue.length / 3);
+      let totalExpected = fullCardsQueue.length;
+      let totalCorrect = 0;
+
+      for (let st = 0; st < totalStations; st++) {
+        const startCard = st * 3;
+        const expectedCards = fullCardsQueue.slice(startCard, startCard + 3);
+        const inputEl = document.getElementById(`deck-rec-in-${st}`);
+        const userText = inputEl ? inputEl.value.toUpperCase().replace(/\s+/g, '') : '';
+
+        expectedCards.forEach(c => {
+          if (userText.includes(c.code.toUpperCase()) || userText.includes(c.paoCode)) {
+            totalCorrect++;
+          }
+        });
+      }
+
+      const pct = Math.round((totalCorrect / totalExpected) * 100);
+      const banner = document.getElementById("deck-recall-score-banner");
+      banner.style.display = "block";
+      banner.className = "mnemonic-story-banner";
+      banner.innerHTML = `
+        <strong>Recall Verification Complete:</strong> ${totalCorrect} of ${totalExpected} cards correct (${pct}%). 
+        Memorization time: <span class="mono">${document.getElementById("deck-timer-display").innerText}</span>.
+      `;
+      if (pct >= 90) playSuccessSound();
+      else playMistakeSound();
+    };
+
+    document.getElementById("deck-btn-generate").onclick = () => {
+      const qty = parseInt(document.getElementById("deck-in-count").value) || 1;
+      shuffleFullDecks(qty);
+    };
+
+    document.getElementById("deck-btn-prev").onclick = () => {
+      if (curStationIdx > 0) {
+        curStationIdx--;
+        updateDeckMemorizerUI();
+      }
+    };
+
+    document.getElementById("deck-btn-next").onclick = () => {
+      const totalStations = Math.ceil(fullCardsQueue.length / 3);
+      if (curStationIdx < totalStations - 1) {
+        curStationIdx++;
+        updateDeckMemorizerUI();
+      }
+    };
+
+    const deckActionToggle = document.getElementById("deck-action-media-toggle");
+    if (deckActionToggle) {
+      deckActionToggle.onclick = () => {
+        const startCard = curStationIdx * 3;
+        const c2 = fullCardsQueue[startCard + 1] || fullCardsQueue[startCard];
+        if (c2) toggleCardActionMode(c2.paoCode, "deck");
+      };
+    }
+
+    async function reRollVisual(cardKey, part, nextOffset) {
+      const card = deck[cardKey];
+      if (!card) return;
+
+      const cleanQ = part === 'p' ? (card.pq || card.person) : (part === 'a' ? (card.aq || card.action) : (card.oq || card.object));
+      let newUrl = null;
+
+      if (part === 'p') {
+        newUrl = await fetchImageFor(cleanQ, "person", nextOffset, card.wiki_slug);
+        if (newUrl) card.p_img = newUrl;
+        card.p_offset = nextOffset;
+      } else if (part === 'a') {
+        const isGif = (card.action_mode || localStorage.getItem("pao_global_action_mode") || "gif") === "gif";
+        if (isGif) {
+          newUrl = await fetchGifFor(cleanQ, nextOffset);
+          if (newUrl) card.a_gif = newUrl;
+          else {
+            newUrl = await fetchImageFor(cleanQ, "action", nextOffset);
+            if (newUrl) card.a_pic = newUrl;
+          }
+        } else {
+          newUrl = await fetchImageFor(cleanQ, "action", nextOffset);
+          if (newUrl) card.a_pic = newUrl;
+        }
+        card.a_offset = nextOffset;
+      } else if (part === 'o') {
+        newUrl = await fetchImageFor(cleanQ, "object", nextOffset);
+        if (newUrl) card.o_img = newUrl;
+        card.o_offset = nextOffset;
+      }
+
+      saveDeck();
+      saveCache();
+
+      // Update Gauntlet viewport in place without re-hiding the card
+      if (document.getElementById("panel-gauntlet").classList.contains("active")) {
+        const boxId = part === 'p' ? 'gauntlet-p-img' : (part === 'a' ? 'gauntlet-a-img' : 'gauntlet-o-img');
+        const gBox = document.getElementById(boxId);
+        if (gBox) applyImageToBox(gBox, cardKey, part, card[part === 'p' ? 'person' : (part === 'a' ? 'action' : 'object')], nextOffset);
+      }
+
+      if (document.getElementById("panel-flashcard").classList.contains("active")) {
+        const fcBox = document.getElementById(part === 'p' ? 'fc-p-img-box' : (part === 'a' ? 'fc-a-img-box' : 'fc-o-img-box'));
+        if (fcBox) applyImageToBox(fcBox, cardKey, part, card[part === 'p' ? 'person' : (part === 'a' ? 'action' : 'object')], nextOffset);
+      }
+
+      if (document.getElementById("panel-deck-memorizer").classList.contains("active")) {
+        updateDeckMemorizerUI();
+      }
+
+      // Live update Master Registry thumbnail cell
+      const regThumb = document.getElementById(`reg-thumb-${part}-${cardKey}`);
+      if (regThumb && newUrl) {
+        regThumb.innerHTML = `<img src="${newUrl}" alt="Visual">`;
+      }
+
+      showToast(`✅ Saved visual #${nextOffset + 1} for Card [${cardKey}] and synced!`);
+    }
+
+    function getCardKeyByInitials(init) {
+      const match = Object.keys(deck).find(k => deck[k].initials === init);
+      return match || "00";
+    }
+
+    function openLightbox(url, caption) {
+      if (!url) return;
+      document.getElementById("lightbox-img").src = url;
+      document.getElementById("lightbox-caption").innerText = decodeURIComponent(caption || "");
+      document.getElementById("lightbox-modal").classList.add("active");
+    }
+
+    let gauntletIdx = 0;
+    let gauntletCheckpoint = 0;
+    let gauntletRevealed = false;
+
+    function getActiveCheckpoint(idx, policy) {
+      if (policy === "10") return Math.floor(idx / 10) * 10;
+      if (policy === "25") return Math.floor(idx / 25) * 25;
+      if (policy === "manual") return gauntletCheckpoint;
+      return 0;
+    }
+
+    function updateGauntletUI() {
+      const key = String(gauntletIdx).padStart(2, "0");
+      const card = deck[key] || DEFAULT_MASTER_DECK[key];
+      gauntletRevealed = false;
+
+      document.getElementById("gauntlet-header-num").innerText = `Card [${key}]`;
+      document.getElementById("gauntlet-num-disp").innerText = key;
+      document.getElementById("gauntlet-init-disp").innerText = card.initials;
+      document.getElementById("gauntlet-p-code").innerText = `[${key}]`;
+      document.getElementById("gauntlet-o-code").innerText = `[${key}]`;
+
+      document.getElementById("gauntlet-progress-bar").style.width = `${((gauntletIdx + 1) / 100) * 100}%`;
+
+      document.getElementById("gauntlet-p-name").innerText = "???";
+      document.getElementById("gauntlet-a-name").innerText = "???";
+      document.getElementById("gauntlet-o-name").innerText = "???";
+
+      document.getElementById("gauntlet-p-img").innerHTML = `<div class="placeholder-art"><span class="glyph">👤</span><span>Hidden</span></div>`;
+      document.getElementById("gauntlet-a-img").innerHTML = `<div class="placeholder-art"><span class="glyph">⚡</span><span>Hidden</span></div>`;
+      document.getElementById("gauntlet-o-img").innerHTML = `<div class="placeholder-art"><span class="glyph">📦</span><span>Hidden</span></div>`;
+
+      document.getElementById("gauntlet-story-banner").style.display = "none";
+      document.getElementById("gauntlet-reveal-row").style.display = "flex";
+      document.getElementById("gauntlet-grade-row").style.display = "none";
+
+      const aTag = document.getElementById("gauntlet-action-media-toggle");
+      if (aTag) {
+        aTag.innerText = (card.action_mode === 'pic') ? '🖼️ PIC' : '🎞️ GIF';
+        aTag.onclick = () => toggleCardActionMode(key, "gauntlet");
+      }
+    }
+
+    document.getElementById("gauntlet-btn-reveal").onclick = () => {
+      if (gauntletRevealed) return;
+      gauntletRevealed = true;
+      const key = String(gauntletIdx).padStart(2, "0");
+      const card = deck[key] || DEFAULT_MASTER_DECK[key];
+
+      document.getElementById("gauntlet-p-name").innerText = card.person;
+      document.getElementById("gauntlet-a-name").innerText = card.action;
+      document.getElementById("gauntlet-o-name").innerText = card.object;
+
+      applyImageToBox(document.getElementById("gauntlet-p-img"), key, "p", card.person);
+      applyImageToBox(document.getElementById("gauntlet-a-img"), key, "a", card.action);
+      applyImageToBox(document.getElementById("gauntlet-o-img"), key, "o", card.object);
+
+      const banner = document.getElementById("gauntlet-story-banner");
+      banner.innerHTML = `<strong>Synthesized Mental Story:</strong> <span style="color:var(--person-color); font-weight:700;">${card.person}</span> is <span style="color:var(--action-color); font-weight:700;">${card.action}</span> the <span style="color:var(--object-color); font-weight:700;">${card.object}</span>.`;
+      banner.style.display = "block";
+
+      document.getElementById("gauntlet-reveal-row").style.display = "none";
+      document.getElementById("gauntlet-grade-row").style.display = "flex";
+    };
+
+    document.getElementById("gauntlet-btn-pass").onclick = () => {
+      playSuccessSound();
+      if (gauntletIdx < 99) {
+        gauntletIdx++;
+        updateGauntletUI();
+      } else {
+        showToast("🏆 Congratulations! You have conquered all 100 cards in the Gauntlet!");
+      }
+    };
+
+    document.getElementById("gauntlet-btn-fail").onclick = () => {
+      playMistakeSound();
+      const policy = document.getElementById("gauntlet-policy-select").value;
+      const cp = getActiveCheckpoint(gauntletIdx, policy);
+      showToast(`Mistake! Reverting to checkpoint [${String(cp).padStart(2, "0")}].`);
+      gauntletIdx = cp;
+      updateGauntletUI();
+    };
+
+    document.getElementById("gauntlet-pin-btn").onclick = () => {
+      gauntletCheckpoint = gauntletIdx;
+      document.getElementById("gauntlet-pin-display").innerText = String(gauntletIdx).padStart(2, "0");
+      showToast(`Pinned checkpoint at [${String(gauntletIdx).padStart(2, "0")}]!`);
+    };
+
+    let fcCurrentNum = "00";
+    let fcRevealed = false;
+
+    function getWeightedRandomCard() {
+      const keys = Object.keys(deck);
+      const weights = keys.map(k => Math.max(0.1, deck[k].weight || 1.0));
+      const totalWeight = weights.reduce((acc, w) => acc + w, 0);
+      let rand = getNextRandom() * totalWeight;
+      for (let i = 0; i < keys.length; i++) {
+        if (rand < weights[i]) return keys[i];
+        rand -= weights[i];
+      }
+      return keys[keys.length - 1];
+    }
+
+    function nextFlashcard() {
+      fcCurrentNum = getWeightedRandomCard();
+      fcRevealed = false;
+      const card = deck[fcCurrentNum];
+
+      document.getElementById("fc-num-disp").innerText = fcCurrentNum;
+      document.getElementById("fc-init-disp").innerText = card.initials;
+      document.getElementById("fc-weight-display").innerText = (card.weight || 1.0).toFixed(2);
+
+      document.getElementById("fc-p-name").innerText = "???";
+      document.getElementById("fc-a-name").innerText = "???";
+      document.getElementById("fc-o-name").innerText = "???";
+
+      document.getElementById("fc-p-img-box").innerHTML = `<div class="placeholder-art"><span class="glyph">👤</span><span>Hidden</span></div>`;
+      document.getElementById("fc-a-img-box").innerHTML = `<div class="placeholder-art"><span class="glyph">⚡</span><span>Hidden</span></div>`;
+      document.getElementById("fc-o-img-box").innerHTML = `<div class="placeholder-art"><span class="glyph">📦</span><span>Hidden</span></div>`;
+
+      document.getElementById("fc-story-banner").style.display = "none";
+      document.getElementById("fc-reveal-wrap").style.display = "flex";
+      document.getElementById("fc-grade-wrap").style.display = "none";
+
+      const aTag = document.getElementById("fc-action-media-toggle");
+      if (aTag) {
+        aTag.innerText = (card.action_mode === 'pic') ? '🖼️ PIC' : '🎞️ GIF';
+        aTag.onclick = () => toggleCardActionMode(fcCurrentNum, "fc");
+      }
+    }
+
+    document.getElementById("fc-btn-reveal").onclick = () => {
+      if (fcRevealed) return;
+      fcRevealed = true;
+      const card = deck[fcCurrentNum];
+
+      document.getElementById("fc-p-name").innerText = card.person;
+      document.getElementById("fc-a-name").innerText = card.action;
+      document.getElementById("fc-o-name").innerText = card.object;
+
+      applyImageToBox(document.getElementById("fc-p-img-box"), fcCurrentNum, "p", card.person);
+      applyImageToBox(document.getElementById("fc-a-img-box"), fcCurrentNum, "a", card.action);
+      applyImageToBox(document.getElementById("fc-o-img-box"), fcCurrentNum, "o", card.object);
+
+      const banner = document.getElementById("fc-story-banner");
+      banner.innerHTML = `<strong>Synthesized Mental Story:</strong> <span style="color:var(--person-color); font-weight:700;">${card.person}</span> is <span style="color:var(--action-color); font-weight:700;">${card.action}</span> the <span style="color:var(--object-color); font-weight:700;">${card.object}</span>.`;
+      banner.style.display = "block";
+
+      document.getElementById("fc-reveal-wrap").style.display = "none";
+      document.getElementById("fc-grade-wrap").style.display = "flex";
+    };
+
+    document.getElementById("fc-btn-pass").onclick = () => {
+      playSuccessSound();
+      const card = deck[fcCurrentNum];
+      card.reviews = (card.reviews || 0) + 1;
+      card.weight = Math.max(0.2, (card.weight || 1.0) * 0.75);
+      saveDeck();
+      nextFlashcard();
+    };
+
+    document.getElementById("fc-btn-fail").onclick = () => {
+      playMistakeSound();
+      const card = deck[fcCurrentNum];
+      card.reviews = (card.reviews || 0) + 1;
+      card.misses = (card.misses || 0) + 1;
+      card.weight = Math.min(15.0, (card.weight || 1.0) + 2.5);
+      saveDeck();
+      nextFlashcard();
+    };
+
+    let revCurrentNum = "00";
+    let revCurrentType = "person";
+
+    function nextReverseDrill() {
+      revCurrentNum = getWeightedRandomCard();
+      const card = deck[revCurrentNum];
+      const types = ["person", "action", "object"];
+      revCurrentType = types[Math.floor(getNextRandom() * types.length)];
+
+      const pill = document.getElementById("rev-type-pill");
+      pill.innerText = revCurrentType.toUpperCase();
+      pill.className = `pao-pill ${revCurrentType === 'person' ? 'pill-p' : (revCurrentType === 'action' ? 'pill-a' : 'pill-o')}`;
+
+      document.getElementById("rev-cue-text").innerText = card[revCurrentType];
+      document.getElementById("rev-input").value = "";
+      document.getElementById("rev-feedback").innerHTML = "";
+      document.getElementById("rev-story-banner").style.display = "none";
+      document.getElementById("rev-input").focus();
+    }
+
+    document.getElementById("rev-btn-check").onclick = () => {
+      const val = document.getElementById("rev-input").value.trim().padStart(2, "0");
+      const fb = document.getElementById("rev-feedback");
+      const card = deck[revCurrentNum];
+      const banner = document.getElementById("rev-story-banner");
+
+      if (val === revCurrentNum) {
+        playSuccessSound();
+        card.weight = Math.max(0.2, (card.weight || 1.0) * 0.75);
+        fb.innerHTML = `<span style="color:var(--success); font-weight:800;">✅ Correct! [${revCurrentNum}]</span> &mdash; ${card.person} | ${card.action} | ${card.object}`;
+        setTimeout(nextReverseDrill, 1300);
+      } else {
+        playMistakeSound();
+        card.misses = (card.misses || 0) + 1;
+        card.weight = Math.min(15.0, (card.weight || 1.0) + 2.5);
+        fb.innerHTML = `<span style="color:var(--danger); font-weight:800;">❌ Incorrect. Correct was [${revCurrentNum}]</span> &mdash; ${card.person} | ${card.action} | ${card.object}`;
+      }
+      saveDeck();
+      banner.innerHTML = `<strong>Synthesized Mental Story:</strong> ${card.person} is ${card.action} the ${card.object}.`;
+      banner.style.display = "block";
+    };
+
+    document.getElementById("rev-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") document.getElementById("rev-btn-check").click();
+    });
+
+    let decChunk = ["00", "00", "00"];
+
+    function nextDecodeDrill() {
+      const keys = Object.keys(deck);
+      decChunk = [
+        keys[Math.floor(getNextRandom() * keys.length)],
+        keys[Math.floor(getNextRandom() * keys.length)],
+        keys[Math.floor(getNextRandom() * keys.length)]
+      ];
+      document.getElementById("dec-chunk-disp").innerText = `${decChunk[0]}-${decChunk[1]}-${decChunk[2]}`;
+      document.getElementById("dec-lbl-p").innerText = `Person [${decChunk[0]}]:`;
+      document.getElementById("dec-lbl-a").innerText = `Action [${decChunk[1]}]:`;
+      document.getElementById("dec-lbl-o").innerText = `Object [${decChunk[2]}]:`;
+
+      document.getElementById("dec-in-p").value = "";
+      document.getElementById("dec-in-a").value = "";
+      document.getElementById("dec-in-o").value = "";
+      document.getElementById("dec-result-box").style.display = "none";
+      document.getElementById("dec-story-banner").style.display = "none";
+    }
+
+    function fuzzyMatchText(userText, targetText) {
+      const u = (userText || "").toLowerCase().trim();
+      const t = (targetText || "").toLowerCase().trim();
+      if (!u) return false;
+      if (t.includes(u) || u.includes(t)) return true;
+      const uWords = u.split(/\s+/);
+      const tWords = new Set(t.split(/\s+/));
+      return uWords.some(w => w.length >= 3 && tWords.has(w));
+    }
+
+    document.getElementById("dec-btn-grade").onclick = () => {
+      const cP = deck[decChunk[0]];
+      const cA = deck[decChunk[1]];
+      const cO = deck[decChunk[2]];
+
+      const pOk = fuzzyMatchText(document.getElementById("dec-in-p").value, cP.person);
+      const aOk = fuzzyMatchText(document.getElementById("dec-in-a").value, cA.action);
+      const oOk = fuzzyMatchText(document.getElementById("dec-in-o").value, cO.object);
+
+      const totalCorrect = (pOk ? 1 : 0) + (aOk ? 1 : 0) + (oOk ? 1 : 0);
+      if (totalCorrect === 3) playSuccessSound();
+      else playMistakeSound();
+
+      const resBox = document.getElementById("dec-result-box");
+      resBox.style.display = "block";
+      resBox.innerHTML = `
+        <div style="font-weight:800; font-size:1.1rem; margin-bottom:0.6rem; color:var(--accent);">Score: ${totalCorrect} / 3 Correct</div>
+        <div style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.88rem;">
+          <div>&bull; Person [${decChunk[0]}]: <span style="font-weight:700; color:${pOk ? 'var(--success)' : 'var(--danger)'};">${pOk ? 'PASS' : 'FAIL'}</span> &mdash; ${cP.person}</div>
+          <div>&bull; Action [${decChunk[1]}]: <span style="font-weight:700; color:${aOk ? 'var(--success)' : 'var(--danger)'};">${aOk ? 'PASS' : 'FAIL'}</span> &mdash; ${cA.action}</div>
+          <div>&bull; Object [${decChunk[2]}]: <span style="font-weight:700; color:${oOk ? 'var(--success)' : 'var(--danger)'};">${oOk ? 'PASS' : 'FAIL'}</span> &mdash; ${cO.object}</div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:0.85rem; padding:0.5rem 1.4rem;" onclick="nextDecodeDrill()">Next 6-Digit Chunk</button>
+      `;
+
+      const banner = document.getElementById("dec-story-banner");
+      banner.innerHTML = `<strong>Synthesized Mental Story:</strong> <span style="color:var(--person-color); font-weight:700;">${cP.person}</span> is <span style="color:var(--action-color); font-weight:700;">${cA.action}</span> the <span style="color:var(--object-color); font-weight:700;">${cO.object}</span>.`;
+      banner.style.display = "block";
+    };
+
+    let sbChunk = ["00", "00", "00"];
+
+    function nextStoryboardChunk() {
+      const keys = Object.keys(deck);
+      sbChunk = [
+        keys[Math.floor(getNextRandom() * keys.length)],
+        keys[Math.floor(getNextRandom() * keys.length)],
+        keys[Math.floor(getNextRandom() * keys.length)]
+      ];
+
+      document.getElementById("sb-chunk-disp").innerText = `${sbChunk[0]} - ${sbChunk[1]} - ${sbChunk[2]}`;
+      document.getElementById("sb-p-code").innerText = `[${sbChunk[0]}]`;
+      document.getElementById("sb-o-code").innerText = `[${sbChunk[2]}]`;
+
+      document.getElementById("sb-p-title").innerText = "???";
+      document.getElementById("sb-a-title").innerText = "???";
+      document.getElementById("sb-o-title").innerText = "???";
+
+      document.getElementById("sb-p-img").innerHTML = `<div class="placeholder-art"><span class="glyph">👤</span><span>Hidden</span></div>`;
+      document.getElementById("sb-a-img").innerHTML = `<div class="placeholder-art"><span class="glyph">⚡</span><span>Hidden</span></div>`;
+      document.getElementById("sb-o-img").innerHTML = `<div class="placeholder-art"><span class="glyph">📦</span><span>Hidden</span></div>`;
+
+      document.getElementById("sb-story-banner").style.display = "none";
+      document.getElementById("sb-btn-reveal").style.display = "inline-flex";
+      document.getElementById("sb-btn-next").style.display = "none";
+
+      const aTag = document.getElementById("sb-action-media-toggle");
+      if (aTag) {
+        aTag.innerText = (deck[sbChunk[1]].action_mode === 'pic') ? '🖼️ PIC' : '🎞️ GIF';
+        aTag.onclick = () => toggleCardActionMode(sbChunk[1], "sb");
+      }
+    }
+
+    document.getElementById("sb-btn-reveal").onclick = () => {
+      const cP = deck[sbChunk[0]];
+      const cA = deck[sbChunk[1]];
+      const cO = deck[sbChunk[2]];
+
+      document.getElementById("sb-p-title").innerText = cP.person;
+      document.getElementById("sb-a-title").innerText = cA.action;
+      document.getElementById("sb-o-title").innerText = cO.object;
+
+      applyImageToBox(document.getElementById("sb-p-img"), sbChunk[0], "p", cP.person);
+      applyImageToBox(document.getElementById("sb-a-img"), sbChunk[1], "a", cA.action);
+      applyImageToBox(document.getElementById("sb-o-img"), sbChunk[2], "o", cO.object);
+
+      const banner = document.getElementById("sb-story-banner");
+      banner.innerHTML = `<strong>Synthesized Mental Story:</strong> <span style="color:var(--person-color); font-weight:700;">${cP.person}</span> is <span style="color:var(--action-color); font-weight:700;">${cA.action}</span> the <span style="color:var(--object-color); font-weight:700;">${cO.object}</span>.`;
+      banner.style.display = "block";
+
+      document.getElementById("sb-btn-reveal").style.display = "none";
+      document.getElementById("sb-btn-next").style.display = "inline-flex";
+    };
+
+    document.getElementById("sb-btn-next").onclick = nextStoryboardChunk;
+
+    let metroTimer = null;
+    let metroCurrentIdx = 0;
+    let metroTotalCount = 15;
+
+    document.getElementById("metro-btn-start").onclick = () => {
+      const paceSec = parseFloat(document.getElementById("metro-in-pace").value) || 2.5;
+      metroTotalCount = parseInt(document.getElementById("metro-in-qty").value) || 15;
+      metroCurrentIdx = 0;
+
+      if (metroTimer) clearInterval(metroTimer);
+      document.getElementById("metro-btn-start").disabled = true;
+
+      function stepMetronome() {
+        if (metroCurrentIdx >= metroTotalCount) {
+          clearInterval(metroTimer);
+          document.getElementById("metro-num-disp").innerText = "✓";
+          document.getElementById("metro-info-disp").innerText = `Completed all ${metroTotalCount} cards!`;
+          document.getElementById("metro-btn-start").disabled = false;
+          return;
+        }
+
+        metroCurrentIdx++;
+        const keys = Object.keys(deck);
+        const cardKey = keys[Math.floor(getNextRandom() * keys.length)];
+        const card = deck[cardKey];
+
+        document.getElementById("metro-num-disp").innerText = cardKey;
+        document.getElementById("metro-info-disp").innerText = `Card ${metroCurrentIdx}/${metroTotalCount} - Visualizing...`;
+        document.getElementById("metro-story-banner").style.display = "none";
+
+        setTimeout(() => {
+          document.getElementById("metro-info-disp").innerHTML = `
+            <strong style="color:var(--person-color);">${card.person}</strong> &bull; 
+            <span style="color:var(--action-color);">${card.action}</span> &bull; 
+            <strong style="color:var(--object-color);">${card.object}</strong>
+          `;
+          const banner = document.getElementById("metro-story-banner");
+          banner.innerHTML = `<strong>Mental Story:</strong> ${card.person} is ${card.action} the ${card.object}.`;
+          banner.style.display = "block";
+        }, paceSec * 600);
+      }
+
+      stepMetronome();
+      metroTimer = setInterval(stepMetronome, paceSec * 1000);
+    };
+
+    let palaceStations = [];
+
+    document.getElementById("palace-btn-build").onclick = () => {
+      const count = parseInt(document.getElementById("palace-in-count").value) || 5;
+      const keys = Object.keys(deck);
+      palaceStations = [];
+
+      const listEl = document.getElementById("palace-stations-list");
+      listEl.innerHTML = "";
+
+      for (let i = 1; i <= count; i++) {
+        const p = keys[Math.floor(getNextRandom() * keys.length)];
+        const a = keys[Math.floor(getNextRandom() * keys.length)];
+        const o = keys[Math.floor(getNextRandom() * keys.length)];
+        palaceStations.push({ station: i, p, a, o, raw: `${p}${a}${o}` });
+
+        const row = document.createElement("div");
+        row.style.cssText = "background:#080d1a; padding:0.85rem 1rem; border-radius:8px; border:1px solid var(--border);";
+        row.innerHTML = `
+          <div style="font-weight:800; color:var(--accent); margin-bottom:0.25rem;">
+            Station ${i < 10 ? '0' + i : i}: [${p}-${a}-${o}] (Raw: ${p}${a}${o})
+          </div>
+          <div style="font-size:0.9rem; color:var(--text);">
+            <span style="color:var(--person-color); font-weight:700;">${deck[p].person}</span> is 
+            <span style="color:var(--action-color); font-weight:700;">${deck[a].action}</span> the 
+            <span style="color:var(--object-color); font-weight:700;">${deck[o].object}</span>.
+          </div>
+        `;
+        listEl.appendChild(row);
+      }
+
+      document.getElementById("palace-setup-box").style.display = "none";
+      document.getElementById("palace-route-box").style.display = "block";
+    };
+
+    document.getElementById("palace-btn-begin-test").onclick = () => {
+      document.getElementById("palace-route-box").style.display = "none";
+      const inputsList = document.getElementById("palace-inputs-list");
+      inputsList.innerHTML = "";
+
+      palaceStations.forEach(st => {
+        const row = document.createElement("div");
+        row.style.cssText = "display:flex; align-items:center; gap:0.75rem; background:#080d1a; padding:0.5rem 0.75rem; border-radius:6px; border:1px solid var(--border);";
+        row.innerHTML = `
+          <label style="width:130px; font-weight:700; color:var(--accent); font-size:0.85rem;">Station ${st.station}:</label>
+          <input type="text" id="pal-input-${st.station}" placeholder="6 digits or XX-XX-XX" style="flex-grow:1; font-size:0.85rem;">
+        `;
+        inputsList.appendChild(row);
+      });
+
+      document.getElementById("palace-results-summary").innerHTML = "";
+      document.getElementById("palace-test-box").style.display = "block";
+    };
+
+    document.getElementById("palace-btn-grade").onclick = () => {
+      let score = 0;
+      let total = palaceStations.length;
+      let summary = "<div style='display:flex; flex-direction:column; gap:0.5rem;'>";
+
+      palaceStations.forEach(st => {
+        const val = document.getElementById(`pal-input-${st.station}`).value.replace(/[-\s]/g, "");
+        const ok = (val === st.raw);
+        if (ok) score++;
+
+        summary += `
+          <div style="background:#080d1a; padding:0.6rem 0.8rem; border-radius:6px; border:1px solid var(--border); font-size:0.85rem;">
+            Station ${st.station}: <strong style="color:${ok ? 'var(--success)' : 'var(--danger)'};">${ok ? 'PASS' : 'FAIL'}</strong> &bull; 
+            Expected: <strong>${st.p}-${st.a}-${st.o}</strong> (${deck[st.p].person} | ${deck[st.a].action} | ${deck[st.o].object})
+          </div>
+        `;
+      });
+
+      summary += `</div><h3 style="margin-top:1rem; color:var(--accent);">Score: ${score} / ${total} Stations Correct (${Math.round((score/total)*100)}%)</h3>`;
+      summary += `<button class="btn btn-primary" style="margin-top:0.75rem;" onclick="location.reload()">Start New Palace Journey</button>`;
+      document.getElementById("palace-results-summary").innerHTML = summary;
+      if (score === total) playSuccessSound();
+      else playMistakeSound();
+    };
+
+    document.getElementById("slicer-btn-slice").onclick = () => {
+      const raw = document.getElementById("slicer-input").value.replace(/\D/g, "");
+      const resBox = document.getElementById("slicer-results");
+      if (!raw) {
+        showToast("Please paste digits into the slicer box.");
+        return;
+      }
+
+      resBox.innerHTML = "";
+      resBox.style.display = "block";
+
+      const stations = [];
+      for (let i = 0; i < raw.length; i += 6) {
+        stations.push(raw.substring(i, i + 6));
+      }
+
+      stations.forEach((chunk, idx) => {
+        const pNum = chunk.substring(0, 2) || "00";
+        const aNum = chunk.substring(2, 4) || pNum;
+        const oNum = chunk.substring(4, 6) || aNum;
+
+        const cP = deck[pNum] || DEFAULT_MASTER_DECK[pNum];
+        const cA = deck[aNum] || DEFAULT_MASTER_DECK[aNum];
+        const cO = deck[oNum] || DEFAULT_MASTER_DECK[oNum];
+
+        const card = document.createElement("div");
+        card.style.cssText = "background:#080d1a; border:1px solid var(--border); border-radius:8px; padding:0.85rem 1rem; margin-bottom:0.75rem;";
+        card.innerHTML = `
+          <div style="font-weight:800; color:var(--accent); margin-bottom:0.35rem;">
+            Station ${idx + 1}: [${chunk}] &bull; (${pNum}-${aNum}-${oNum})
+          </div>
+          <div style="font-size:0.9rem; line-height:1.4;">
+            <span style="color:var(--person-color); font-weight:700;">${cP.person}</span> is 
+            <span style="color:var(--action-color); font-weight:700;">${cA.action}</span> the 
+            <span style="color:var(--object-color); font-weight:700;">${cO.object}</span>.
+          </div>
+        `;
+        resBox.appendChild(card);
+      });
+    };
+
+    let filterWeakOnly = false;
+
+    async function renderMasterRegistry(filterQuery = "", onlyWeak = false) {
+      const tbody = document.querySelector("#reg-table tbody");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      let keys = Object.keys(deck).sort();
+      if (onlyWeak) {
+        keys.sort((a, b) => (deck[b].weight || 1.0) - (deck[a].weight || 1.0));
+      }
+
+      const globalDefault = localStorage.getItem("pao_global_action_mode") || "gif";
+
+      for (const k of keys) {
+        const c = deck[k];
+        const match = !filterQuery || 
+          k.includes(filterQuery) || 
+          c.person.toLowerCase().includes(filterQuery.toLowerCase()) || 
+          c.action.toLowerCase().includes(filterQuery.toLowerCase()) || 
+          c.object.toLowerCase().includes(filterQuery.toLowerCase()) || 
+          c.initials.toLowerCase().includes(filterQuery.toLowerCase());
+
+        if (!match) continue;
+
+        const pThumb = c.p_img || imgCache[`person_${(c.pq || c.person).toLowerCase()}`];
+        const activeActionMode = c.action_mode || globalDefault;
+        const aThumb = activeActionMode === 'gif'
+          ? (c.a_gif || imgCache[`action_gif_${(c.aq || c.action).toLowerCase()}`] || c.a_pic || imgCache[`action_${(c.aq || c.action).toLowerCase()}`])
+          : (c.a_pic || imgCache[`action_${(c.aq || c.action).toLowerCase()}`]);
+        const oThumb = c.o_img || imgCache[`object_${(c.oq || c.object).toLowerCase()}`] || imgCache[`object_${c.object.toLowerCase()}`];
+
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td><strong class="mono" style="color:var(--accent); font-size:1.05rem;">${k}</strong></td>
+          <td class="mono" style="color:var(--text-muted); font-weight:700;">${c.initials}</td>
+          
+          <td>
+            <div class="reg-cell-flex">
+              <div class="reg-mini-thumb" id="reg-thumb-p-${k}" onclick="event.stopPropagation(); openFinderModal('${k}', 'p')">
+                ${pThumb ? `<img src="${pThumb}" alt="${c.person}">` : `<span style="font-size:1.1rem;">👤</span>`}
+              </div>
+              <div style="flex-grow:1; min-width:0;">
+                <div style="font-weight:700; color:var(--person-color); line-height:1.2;">${c.person}</div>
+                <div style="display:flex; gap:0.3rem; margin-top:2px;">
+                  <button class="reg-btn-mini" onclick="event.stopPropagation(); reRollVisual('${k}', 'p', ${(c.p_offset || 0) + 1})">🎲 Next</button>
+                  <button class="reg-btn-mini" onclick="event.stopPropagation(); openFinderModal('${k}', 'p')">🔍 Source</button>
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class="reg-cell-flex">
+              <div class="reg-mini-thumb" id="reg-thumb-a-${k}" onclick="event.stopPropagation(); openFinderModal('${k}', 'a')">
+                ${aThumb ? `<img src="${aThumb}" alt="${c.action}">` : `<span style="font-size:1.1rem;">⚡</span>`}
+                <span class="reg-thumb-tag">${activeActionMode === 'gif' ? 'GIF' : 'PIC'}</span>
+              </div>
+              <div style="flex-grow:1; min-width:0;">
+                <div style="color:var(--action-color); font-weight:600; line-height:1.2;">${c.action}</div>
+                <div style="display:flex; gap:0.3rem; margin-top:2px;">
+                  <button class="reg-btn-mini" onclick="event.stopPropagation(); toggleCardActionMode('${k}', 'reg')">
+                    ${activeActionMode === 'gif' ? '🎞️ GIF' : '🖼️ PIC'}
+                  </button>
+                  <button class="reg-btn-mini" onclick="event.stopPropagation(); reRollVisual('${k}', 'a', ${(c.a_offset || 0) + 1})">🎲 Next</button>
+                  <button class="reg-btn-mini" onclick="event.stopPropagation(); openFinderModal('${k}', 'a')">🔍 Source</button>
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class="reg-cell-flex">
+              <div class="reg-mini-thumb" id="reg-thumb-o-${k}" onclick="event.stopPropagation(); openFinderModal('${k}', 'o')">
+                ${oThumb ? `<img src="${oThumb}" alt="${c.object}">` : `<span style="font-size:1.1rem;">📦</span>`}
+              </div>
+              <div style="flex-grow:1; min-width:0;">
+                <div style="color:var(--object-color); font-weight:600; line-height:1.2;">${c.object}</div>
+                <div style="display:flex; gap:0.3rem; margin-top:2px;">
+                  <button class="reg-btn-mini" onclick="event.stopPropagation(); reRollVisual('${k}', 'o', ${(c.o_offset || 0) + 1})">🎲 Next</button>
+                  <button class="reg-btn-mini" onclick="event.stopPropagation(); openFinderModal('${k}', 'o')">🔍 Source</button>
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <td><span class="badge-stat">${(c.weight || 1.0).toFixed(2)}</span></td>
+          <td>${c.misses || 0}</td>
+          <td>
+            <button class="btn" style="padding:0.35rem 0.65rem; font-size:0.75rem;" onclick="event.stopPropagation(); openCardEditor('${k}')">✏️ Edit</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+
+        // Asynchronously resolve missing visuals in place
+        if (!pThumb) {
+          fetchImageFor(c.pq || c.person, "person").then(url => {
+            if (url) {
+              c.p_img = url;
+              const el = document.getElementById(`reg-thumb-p-${k}`);
+              if (el) el.innerHTML = `<img src="${url}" alt="${c.person}">`;
+            }
+          });
+        }
+        if (!aThumb) {
+          fetchGifFor(c.aq || c.action).then(url => {
+            if (url) {
+              c.a_gif = url;
+              const el = document.getElementById(`reg-thumb-a-${k}`);
+              if (el) el.innerHTML = `<img src="${url}" alt="${c.action}"><span class="reg-thumb-tag">${activeActionMode === 'gif' ? 'GIF' : 'PIC'}</span>`;
+            }
+          });
+        }
+        if (!oThumb) {
+          fetchImageFor(c.oq || c.object, "object").then(url => {
+            if (url) {
+              c.o_img = url;
+              const el = document.getElementById(`reg-thumb-o-${k}`);
+              if (el) el.innerHTML = `<img src="${url}" alt="${c.object}">`;
+            }
+          });
+        }
+      }
+    }
+
+    let isPrefilling = false;
+    async function autoPrefillAllVisuals() {
+      if (isPrefilling) return;
+      isPrefilling = true;
+      const keys = Object.keys(deck);
+      for (const k of keys) {
+        const c = deck[k];
+        fetchImageFor(c.pq || c.person, "person").then(u => {
+          if (u) {
+            c.p_img = u;
+            const el = document.getElementById(`reg-thumb-p-${k}`);
+            if (el) el.innerHTML = `<img src="${u}" alt="${c.person}">`;
+          }
+        });
+        fetchGifFor(c.aq || c.action).then(u => {
+          if (u) {
+            c.a_gif = u;
+            const el = document.getElementById(`reg-thumb-a-${k}`);
+            if (el) el.innerHTML = `<img src="${u}" alt="${c.action}"><span class="reg-thumb-tag">GIF</span>`;
+          }
+        });
+        fetchImageFor(c.oq || c.object, "object").then(u => {
+          if (u) {
+            c.o_img = u;
+            const el = document.getElementById(`reg-thumb-o-${k}`);
+            if (el) el.innerHTML = `<img src="${u}" alt="${c.object}">`;
+          }
+        });
+      }
+      setTimeout(() => {
+        isPrefilling = false;
+        saveDeck();
+        saveCache();
+      }, 2000);
+    }
+
+    document.getElementById("reg-btn-auto-prefill").onclick = () => {
+      showToast("Pre-resolving visuals in background...");
+      autoPrefillAllVisuals();
+    };
+
+    document.getElementById("reg-btn-filter-weak").onclick = () => {
+      filterWeakOnly = !filterWeakOnly;
+      document.getElementById("reg-btn-filter-weak").innerText = filterWeakOnly ? "Show All Cards" : "Show Weakest Cards";
+      renderMasterRegistry(document.getElementById("reg-search-input").value, filterWeakOnly);
+    };
+
+    document.getElementById("reg-btn-reset-weights").onclick = () => {
+      Object.keys(deck).forEach(k => {
+        deck[k].weight = 1.0;
+        deck[k].misses = 0;
+        deck[k].reviews = 0;
+      });
+      saveDeck();
+      renderMasterRegistry();
+      showToast("All card weights reset to 1.00!");
+    };
+
+    document.getElementById("reg-search-input").oninput = (e) => {
+      renderMasterRegistry(e.target.value, filterWeakOnly);
+    };
+
+    function toggleCardActionMode(cardKey, context = "reg") {
+      const card = deck[cardKey];
+      if (!card) return;
+      const current = card.action_mode || (localStorage.getItem("pao_global_action_mode") || "gif");
+      card.action_mode = (current === "gif") ? "pic" : "gif";
+      saveDeck();
+
+      if (context === "gauntlet") {
+        document.getElementById("gauntlet-action-media-toggle").innerText = card.action_mode === 'gif' ? '🎞️ GIF' : '🖼️ PIC';
+        applyImageToBox(document.getElementById("gauntlet-a-img"), cardKey, "a", card.action);
+      } else if (context === "deck") {
+        document.getElementById("deck-action-media-toggle").innerText = card.action_mode === 'gif' ? '🎞️ GIF' : '🖼️ PIC';
+        applyImageToBox(document.getElementById("deck-a-img"), cardKey, "a", card.action);
+      } else if (context === "fc") {
+        document.getElementById("fc-action-media-toggle").innerText = card.action_mode === 'gif' ? '🎞️ GIF' : '🖼️ PIC';
+        applyImageToBox(document.getElementById("fc-a-img-box"), cardKey, "a", card.action);
+      } else if (context === "sb") {
+        document.getElementById("sb-action-media-toggle").innerText = card.action_mode === 'gif' ? '🎞️ GIF' : '🖼️ PIC';
+        applyImageToBox(document.getElementById("sb-a-img"), cardKey, "a", card.action);
+      } else if (context === "reg") {
+        renderMasterRegistry(document.getElementById("reg-search-input").value, filterWeakOnly);
+      }
+    }
+
+    let finderActiveCard = "00";
+    let finderActivePart = "p";
+    let finderActiveSource = "giphy";
+    let finderSelectedUrl = "";
+
+    function openFinderModal(cardKey, part) {
+      finderActiveCard = cardKey;
+      finderActivePart = part;
+      finderSelectedUrl = "";
+
+      const card = deck[cardKey];
+      const partName = part === 'p' ? 'Person' : (part === 'a' ? 'Action' : 'Object');
+      const targetQuery = part === 'p' ? (card.pq || card.person) : (part === 'a' ? (card.aq || card.action) : (card.oq || card.object));
+
+      document.getElementById("finder-title").innerText = `Find ${partName} Visual for [${cardKey}] ${card.person}`;
+      document.getElementById("finder-search-input").value = targetQuery;
+      document.getElementById("finder-manual-url").value = "";
+      document.getElementById("finder-results-grid").innerHTML = "";
+
+      document.getElementById("finder-action-target-row").style.display = (part === 'a') ? 'flex' : 'none';
+
+      const chipsRow = document.getElementById("finder-chips-row");
+      chipsRow.innerHTML = "";
+      const chipQueries = [];
+      if (part === 'p') {
+        chipQueries.push(card.person, card.pq || card.person, `${card.person} character`);
+      } else if (part === 'a') {
+        chipQueries.push(card.aq || card.action, card.action, `${card.action} animation`);
+      } else {
+        chipQueries.push(card.oq || card.object, card.object);
+      }
+
+      Array.from(new Set(chipQueries.filter(Boolean))).forEach(q => {
+        const chip = document.createElement("button");
+        chip.className = "media-indicator-tag";
+        chip.style.cssText = "font-size:0.75rem; padding:0.25rem 0.6rem;";
+        chip.innerText = q;
+        chip.onclick = () => {
+          document.getElementById("finder-search-input").value = q;
+          document.getElementById("finder-btn-search").click();
+        };
+        chipsRow.appendChild(chip);
+      });
+
+      finderActiveSource = (part === 'a') ? "giphy" : "wiki";
+      document.querySelectorAll(".source-tab-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.src === finderActiveSource);
+      });
+
+      document.getElementById("finder-modal").classList.add("active");
+      document.getElementById("finder-btn-search").click();
+    }
+
+    function closeFinderModal() {
+      document.getElementById("finder-modal").classList.remove("active");
+    }
+
+    document.querySelectorAll(".source-tab-btn").forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll(".source-tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        finderActiveSource = btn.dataset.src;
+        document.getElementById("finder-btn-search").click();
+      };
+    });
+
+    document.getElementById("finder-btn-search").onclick = async () => {
+      const q = document.getElementById("finder-search-input").value.trim();
+      if (!q) return;
+      const grid = document.getElementById("finder-results-grid");
+      grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:1.5rem;"><div class="spinner-sm" style="margin:auto;"></div></div>`;
+
+      let results = [];
+      if (finderActiveSource === "giphy") {
+        results = await queryGiphyGifs(q);
+        if (results.length === 0) {
+          results = await queryWikimediaCommons(q, true);
+        }
+      } else if (finderActiveSource === "wiki") {
+        const card = deck[finderActiveCard];
+        const summary = await queryWikipediaSummary(card?.wiki_slug || q.replace(/\s+/g, '_'));
+        const wikiSearch = await queryWikipediaImages(q);
+        results = Array.from(new Set([summary, ...wikiSearch].filter(Boolean)));
+      } else if (finderActiveSource === "commons") {
+        results = await queryWikimediaCommons(q, finderActivePart === 'a');
+      } else if (finderActiveSource === "openverse") {
+        results = await queryOpenverse(q);
+      }
+
+      if (!results || results.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:1rem;">No results found from this provider. Click another provider tab above or paste a direct image URL below.</div>`;
+        return;
+      }
+
+      grid.innerHTML = "";
+      results.forEach(url => {
+        const div = document.createElement("div");
+        div.style.cssText = "height:95px; border-radius:6px; overflow:hidden; border:2px solid var(--border); cursor:pointer; background:#000; position:relative;";
+        div.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:contain;">`;
+        div.onclick = () => {
+          grid.querySelectorAll("div").forEach(d => d.style.borderColor = "var(--border)");
+          div.style.borderColor = "var(--accent)";
+          finderSelectedUrl = url;
+          document.getElementById("finder-manual-url").value = url;
+        };
+        grid.appendChild(div);
+      });
+    };
+
+    document.getElementById("finder-btn-apply").onclick = () => {
+      const finalUrl = document.getElementById("finder-manual-url").value.trim() || finderSelectedUrl;
+      if (!finalUrl) {
+        showToast("Please select a visual thumbnail or enter an image URL.");
+        return;
+      }
+
+      const card = deck[finderActiveCard];
+      if (!card) return;
+
+      if (finderActivePart === "p") {
+        card.p_img = finalUrl;
+        imgCache[`person_${(card.pq || card.person).toLowerCase()}`] = finalUrl;
+      } else if (finderActivePart === "a") {
+        const targetSlot = document.querySelector('input[name="finder-action-target"]:checked')?.value || "gif";
+        if (targetSlot === "gif") {
+          card.a_gif = finalUrl;
+          card.action_mode = "gif";
+          imgCache[`action_gif_${(card.aq || card.action).toLowerCase()}`] = finalUrl;
+        } else {
+          card.a_pic = finalUrl;
+          card.action_mode = "pic";
+          imgCache[`action_${(card.aq || card.action).toLowerCase()}`] = finalUrl;
+        }
+      } else if (finderActivePart === "o") {
+        card.o_img = finalUrl;
+        imgCache[`object_${(card.oq || card.object).toLowerCase()}`] = finalUrl;
+      }
+
+      saveCache();
+      saveDeck();
+      closeFinderModal();
+
+      // Update Master Registry thumbnail immediately
+      const regThumb = document.getElementById(`reg-thumb-${finderActivePart}-${finderActiveCard}`);
+      if (regThumb) regThumb.innerHTML = `<img src="${finalUrl}" alt="Visual">`;
+
+      // Update Gauntlet viewport in place without re-hiding the card
+      if (document.getElementById("panel-gauntlet").classList.contains("active")) {
+        const boxId = finderActivePart === 'p' ? 'gauntlet-p-img' : (finderActivePart === 'a' ? 'gauntlet-a-img' : 'gauntlet-o-img');
+        const gBox = document.getElementById(boxId);
+        if (gBox) applyImageToBox(gBox, finderActiveCard, finderActivePart, card[finderActivePart === 'p' ? 'person' : (finderActivePart === 'a' ? 'action' : 'object')]);
+      }
+
+      if (document.getElementById("panel-deck-memorizer").classList.contains("active")) {
+        updateDeckMemorizerUI();
+      }
+
+      showToast(`✅ Visual saved for Card [${finderActiveCard}] and synced!`);
+    };
+
+    document.getElementById("finder-file-input").onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        document.getElementById("finder-manual-url").value = evt.target.result;
+        finderSelectedUrl = evt.target.result;
+        showToast("Local visual file loaded!");
+      };
+      reader.readAsDataURL(file);
+    };
+
+    let editingCardKey = "00";
+
+    function openCardEditor(cardKey) {
+      editingCardKey = cardKey;
+      const card = deck[cardKey];
+      document.getElementById("modal-card-title").innerText = `Edit Card [${cardKey}]`;
+      document.getElementById("modal-in-init").value = card.initials;
+      document.getElementById("modal-in-p").value = card.person;
+      document.getElementById("modal-in-a").value = card.action;
+      document.getElementById("modal-in-o").value = card.object;
+      document.getElementById("edit-modal").classList.add("active");
+    }
+
+    document.getElementById("modal-btn-save").onclick = () => {
+      const card = deck[editingCardKey];
+      card.initials = document.getElementById("modal-in-init").value.trim();
+      card.person = document.getElementById("modal-in-p").value.trim();
+      card.action = document.getElementById("modal-in-a").value.trim();
+      card.object = document.getElementById("modal-in-o").value.trim();
+      saveDeck();
+      document.getElementById("edit-modal").classList.remove("active");
+      renderMasterRegistry(document.getElementById("reg-search-input").value, filterWeakOnly);
+      showToast(`Card [${editingCardKey}] updated!`);
+    };
+
+    document.getElementById("btn-open-io").onclick = () => {
+      document.getElementById("io-modal").classList.add("active");
+    };
+
+    document.getElementById("io-btn-export-json").onclick = () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(deck, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "dominic_pao_deck.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Deck exported as JSON!");
+    };
+
+    document.getElementById("io-btn-export-default-json").onclick = () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DEFAULT_MASTER_DECK, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "dominic_pao_default_deck.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Factory default deck exported as JSON!");
+    };
+
+    document.getElementById("io-btn-export-csv").onclick = () => {
+      let csv = "Number,Initials,Person,Action,Object\n";
+      Object.keys(deck).sort().forEach(k => {
+        const c = deck[k];
+        csv += `"${k}","${c.initials}","${c.person.replace(/"/g, '""')}","${c.action.replace(/"/g, '""')}","${c.object.replace(/"/g, '""')}"\n`;
+      });
+      const dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "dominic_pao_deck.csv");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Deck exported as CSV!");
+    };
+
+    document.getElementById("io-btn-upload-file").onclick = () => {
+      const fileInput = document.getElementById("io-file-input");
+      if (!fileInput.files.length) {
+        showToast("Please choose a JSON or CSV file first.");
+        return;
+      }
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const text = e.target.result;
+        try {
+          if (file.name.endsWith(".json")) {
+            const imported = JSON.parse(text);
+            Object.keys(imported).forEach(k => {
+              deck[k] = Object.assign(deck[k] || {}, imported[k]);
+            });
+          } else {
+            // parse CSV
+            const lines = text.split(/\r?\n/).filter(l => l.trim().length);
+            lines.slice(1).forEach(line => {
+              const parts = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+              if (parts && parts.length >= 5) {
+                const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
+                const num = clean[0].padStart(2, "0");
+                if (deck[num]) {
+                  deck[num].initials = clean[1];
+                  deck[num].person = clean[2];
+                  deck[num].action = clean[3];
+                  deck[num].object = clean[4];
+                }
+              }
+            });
+          }
+          saveDeck();
+          renderMasterRegistry();
+          document.getElementById("io-modal").classList.remove("active");
+          showToast("Custom deck uploaded and applied successfully!");
+        } catch (err) {
+          showToast("Failed to parse file: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    document.getElementById("io-btn-factory-reset").onclick = () => {
+      deck = JSON.parse(JSON.stringify(DEFAULT_MASTER_DECK));
+      saveDeck();
+      renderMasterRegistry();
+      document.getElementById("io-modal").classList.remove("active");
+      showToast("Deck reset to factory defaults!");
+    };
+
+    let voiceSynthesisActive = false;
+
+    function speakCurrentScene(text) {
+      if (isMuted || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+      const naturalVoice = voices.find(v => v.lang.startsWith("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Enhanced")));
+      if (naturalVoice) utterance.voice = naturalVoice;
+      utterance.rate = 1.0;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    document.getElementById("btn-voice-settings").onclick = () => {
+      voiceSynthesisActive = !voiceSynthesisActive;
+      showToast(voiceSynthesisActive ? "🎙️ Voice recitation ON" : "🎙️ Voice recitation OFF");
+      if (voiceSynthesisActive) speakCurrentScene("Dominic voice recitation active.");
+    };
+
+    document.querySelectorAll("nav.tab-bar button").forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll("nav.tab-bar button").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        const targetId = btn.getAttribute("data-target");
+        const targetPanel = document.getElementById(targetId);
+        if (targetPanel) targetPanel.classList.add("active");
+
+        if (targetId === "panel-registry") renderMasterRegistry();
+        if (targetId === "panel-deck-memorizer" && fullCardsQueue.length === 0) shuffleFullDecks(1);
+        if (targetId === "panel-flashcard") nextFlashcard();
+        if (targetId === "panel-reverse") nextReverseDrill();
+        if (targetId === "panel-decode") nextDecodeDrill();
+        if (targetId === "panel-storyboard") nextStoryboardChunk();
+      };
+    });
+
+    document.getElementById("btn-toggle-rng").onclick = () => {
+      useLavaRng = !useLavaRng;
+      localStorage.setItem("pao_use_lava_rng", String(useLavaRng));
+      document.getElementById("rng-mode-label").innerText = useLavaRng ? "🔥 RNG: Lava Lamp (True)" : "🎲 RNG: Standard";
+      showToast(`Switched to ${useLavaRng ? 'Chaotic Lava Lamp True RNG' : 'Standard PRNG'}`);
+    };
+
+    document.getElementById("btn-open-lava").onclick = () => {
+      document.getElementById("lava-modal").classList.add("active");
+    };
+
+    document.getElementById("btn-toggle-global-media").onclick = () => {
+      const cur = localStorage.getItem("pao_global_action_mode") || "gif";
+      const next = (cur === "gif") ? "pic" : "gif";
+      localStorage.setItem("pao_global_action_mode", next);
+      document.getElementById("global-media-label").innerText = next === 'gif' ? '🎞️ GIFs: ON' : '🖼️ PICs: ONLY';
+      showToast(`Actions now prefer ${next === 'gif' ? 'Animated GIFs' : 'Still Photos'}.`);
+      updateGauntletUI();
+      updateDeckMemorizerUI();
+      renderMasterRegistry();
+    };
+
+    document.getElementById("btn-audio-mute").onclick = () => {
+      isMuted = !isMuted;
+      localStorage.setItem("pao_muted", String(isMuted));
+      document.getElementById("btn-audio-mute").innerText = isMuted ? "🔇" : "🔊";
+      showToast(isMuted ? "Sound muted." : "Sound unmuted.");
+    };
+
+    window.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      if (e.code === "Space") {
+        if (document.getElementById("panel-gauntlet").classList.contains("active")) {
+          e.preventDefault();
+          if (!gauntletRevealed) document.getElementById("gauntlet-btn-reveal").click();
+          else document.getElementById("gauntlet-btn-pass").click();
+        } else if (document.getElementById("panel-flashcard").classList.contains("active")) {
+          e.preventDefault();
+          if (!fcRevealed) document.getElementById("fc-btn-reveal").click();
+          else document.getElementById("fc-btn-pass").click();
+        }
+      }
+    });
+
+    window.onload = () => {
+      initDeck();
+      initLavaLamp();
+      updateGauntletUI();
+      shuffleFullDecks(1);
+      renderMasterRegistry();
+      autoPrefillAllVisuals();
+
+      if (useLavaRng) {
+        document.getElementById("rng-mode-label").innerText = "🔥 RNG: Lava Lamp (True)";
+      }
+      const globalMode = localStorage.getItem("pao_global_action_mode") || "gif";
+      document.getElementById("global-media-label").innerText = globalMode === 'gif' ? '🎞️ GIFs: ON' : '🖼️ PICs: ONLY';
+      document.getElementById("btn-audio-mute").innerText = isMuted ? "🔇" : "🔊";
+    };
+  </script>
+</body>
+</html>
