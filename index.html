@@ -2649,34 +2649,6 @@
       showToast(`Gauntlet range set to [${String(s).padStart(2, "0")}–${String(e).padStart(2, "0")}] (${e - s + 1} cards)!`);
     }
 
-    let gauntletIdx = 0;
-    let gauntletStartIdx = 0;
-    let gauntletEndIdx = 99;
-    let gauntletCheckpoint = 0;
-    let gauntletRevealed = false;
-
-    function setGauntletRange(startVal, endVal) {
-      let s = Math.max(0, Math.min(99, parseInt(startVal, 10) || 0));
-      let e = Math.max(0, Math.min(99, parseInt(endVal, 10) || 99));
-      if (s > e) [s, e] = [e, s];
-      gauntletStartIdx = s;
-      gauntletEndIdx = e;
-      gauntletIdx = s;
-      gauntletCheckpoint = s;
-
-      const sIn = document.getElementById("gauntlet-start-input");
-      const eIn = document.getElementById("gauntlet-end-input");
-      if (sIn) sIn.value = s;
-      if (eIn) eIn.value = e;
-
-      const pinDisp = document.getElementById("gauntlet-pin-display");
-      if (pinDisp) pinDisp.innerText = String(s).padStart(2, "0");
-
-      setActiveRangePreset("gauntlet", s, e);
-      updateGauntletUI();
-      showToast(`Gauntlet range set to [${String(s).padStart(2, "0")}–${String(e).padStart(2, "0")}]!`);
-    }
-
     function jumpGauntletTo(cardNum) {
       let val = parseInt(cardNum, 10);
       if (isNaN(val)) val = gauntletStartIdx;
@@ -3876,6 +3848,7 @@
         const targetPanel = document.getElementById(targetId);
         if (targetPanel) targetPanel.classList.add("active");
 
+        if (targetId === "panel-gauntlet") updateGauntletUI();
         if (targetId === "panel-registry") renderMasterRegistry();
         if (targetId === "panel-deck-memorizer" && fullCardsQueue.length === 0) shuffleFullDecks(1);
         if (targetId === "panel-flashcard") nextFlashcard();
