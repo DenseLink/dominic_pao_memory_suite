@@ -739,6 +739,98 @@
       background: #090e1a;
     }
 
+    .range-control-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      background: #080d1a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.6rem 0.9rem;
+      margin-bottom: 1.15rem;
+      width: 100%;
+    }
+
+    .range-inputs-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .range-title-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .range-sub-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .range-num-input {
+      width: 52px !important;
+      padding: 0.25rem 0.35rem !important;
+      text-align: center !important;
+      font-size: 0.85rem !important;
+      font-weight: 700;
+    }
+
+    .range-presets-group {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    .range-preset-pill {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .range-preset-pill:hover {
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .range-preset-pill.active {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .range-status-badge {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: #0f172a;
+      padding: 0.25rem 0.55rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .range-status-badge strong {
+      color: var(--accent);
+    }
+
     #toast {
       position: fixed;
       bottom: 24px;
@@ -836,23 +928,45 @@
   <main>
     <div id="panel-gauntlet" class="panel active">
       <div class="card-shell" style="max-width:920px;">
+        <!-- Gauntlet Range Selector Bar -->
+        <div class="range-control-bar">
+          <div class="range-inputs-group">
+            <span class="range-title-label">🎯 Gauntlet Range:</span>
+            <span class="range-sub-label">From</span>
+            <input type="number" id="gauntlet-start-input" min="0" max="99" value="0" placeholder="00" class="range-num-input mono">
+            <span class="range-sub-label">To</span>
+            <input type="number" id="gauntlet-end-input" min="0" max="99" value="99" placeholder="99" class="range-num-input mono">
+            <button class="btn btn-primary" id="gauntlet-start-btn" style="padding:0.25rem 0.65rem; font-size:0.75rem;">Set Range</button>
+          </div>
+          <div class="range-presets-group">
+            <span class="range-sub-label">Presets:</span>
+            <button class="range-preset-pill active" data-target="gauntlet" data-min="0" data-max="99">All (00–99)</button>
+            <button class="range-preset-pill" data-target="gauntlet" data-min="0" data-max="10">0–10</button>
+            <button class="range-preset-pill" data-target="gauntlet" data-min="10" data-max="20">10–20</button>
+            <button class="range-preset-pill" data-target="gauntlet" data-min="30" data-max="70">30–70</button>
+            <button class="range-preset-pill" data-target="gauntlet" data-min="0" data-max="19">00–19</button>
+            <button class="range-preset-pill" data-target="gauntlet" data-min="20" data-max="39">20–39</button>
+            <button class="range-preset-pill" data-target="gauntlet" data-min="40" data-max="59">40–59</button>
+            <button class="range-preset-pill" data-target="gauntlet" data-min="60" data-max="79">60–79</button>
+            <button class="range-preset-pill" data-target="gauntlet" data-min="80" data-max="99">80–99</button>
+          </div>
+          <div class="range-status-badge">
+            Scope: <strong id="gauntlet-range-status-display">00–99 (100 cards)</strong>
+          </div>
+        </div>
+
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
           <div style="text-align:left;">
             <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Sequential Gauntlet</div>
             <h2 style="font-size:1.8rem; font-weight:900; color:var(--accent);" id="gauntlet-header-num">Card [00]</h2>
           </div>
           <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:0.35rem; background:#080d1a; padding:0.25rem 0.5rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
-              <label for="gauntlet-start-input" style="font-size:0.78rem; color:var(--text-muted); font-weight:700;">Start Card:</label>
-              <input type="number" id="gauntlet-start-input" min="0" max="99" value="0" placeholder="00" style="width:52px; text-align:center; font-size:0.82rem; padding:0.25rem 0.35rem;" class="mono">
-              <button class="btn btn-primary" id="gauntlet-start-btn" style="padding:0.25rem 0.55rem; font-size:0.75rem;">Go</button>
-            </div>
             <label style="font-size:0.78rem; color:var(--text-muted); font-weight:600;">Checkpoint Policy:</label>
             <select id="gauntlet-policy-select" style="font-size:0.78rem; padding:0.35rem 0.6rem;">
               <option value="10">Every 10 Cards (00, 10, 20...)</option>
               <option value="25">Every 25 Cards (00, 25, 50, 75)</option>
               <option value="manual">Manual Pin Checkpoint</option>
-              <option value="ironman">Ironman (Reset to 00 on miss)</option>
+              <option value="ironman">Ironman (Reset to Start on miss)</option>
             </select>
             <button class="btn" id="gauntlet-pin-btn" style="padding:0.35rem 0.65rem; font-size:0.75rem;">📌 Pin Checkpoint (<span id="gauntlet-pin-display">00</span>)</button>
           </div>
@@ -919,6 +1033,33 @@
 
     <div id="panel-flashcard" class="panel">
       <div class="card-shell" style="max-width:920px;">
+        <!-- Flashcard Range Selector Bar -->
+        <div class="range-control-bar">
+          <div class="range-inputs-group">
+            <span class="range-title-label">🎯 Card Range:</span>
+            <span class="range-sub-label">From</span>
+            <input type="number" id="fc-range-min" min="0" max="99" value="0" placeholder="00" class="range-num-input mono">
+            <span class="range-sub-label">To</span>
+            <input type="number" id="fc-range-max" min="0" max="99" value="99" placeholder="99" class="range-num-input mono">
+            <button class="btn btn-primary" id="fc-range-apply" style="padding:0.25rem 0.65rem; font-size:0.75rem;">Set Range</button>
+          </div>
+          <div class="range-presets-group">
+            <span class="range-sub-label">Presets:</span>
+            <button class="range-preset-pill active" data-target="fc" data-min="0" data-max="99">All (00–99)</button>
+            <button class="range-preset-pill" data-target="fc" data-min="0" data-max="10">0–10</button>
+            <button class="range-preset-pill" data-target="fc" data-min="10" data-max="20">10–20</button>
+            <button class="range-preset-pill" data-target="fc" data-min="30" data-max="70">30–70</button>
+            <button class="range-preset-pill" data-target="fc" data-min="0" data-max="19">00–19</button>
+            <button class="range-preset-pill" data-target="fc" data-min="20" data-max="39">20–39</button>
+            <button class="range-preset-pill" data-target="fc" data-min="40" data-max="59">40–59</button>
+            <button class="range-preset-pill" data-target="fc" data-min="60" data-max="79">60–79</button>
+            <button class="range-preset-pill" data-target="fc" data-min="80" data-max="99">80–99</button>
+          </div>
+          <div class="range-status-badge">
+            Scope: <strong id="fc-range-status-display">00–99 (100 cards)</strong>
+          </div>
+        </div>
+
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
           <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">Weighted Spaced Repetition (SRS)</div>
           <div class="badge-stat">Weight: <span id="fc-weight-display">1.00</span></div>
@@ -1073,6 +1214,33 @@
 
     <div id="panel-reverse" class="panel">
       <div class="card-shell" style="max-width:700px;">
+        <!-- Reverse Drill Range Selector Bar -->
+        <div class="range-control-bar">
+          <div class="range-inputs-group">
+            <span class="range-title-label">🎯 Card Range:</span>
+            <span class="range-sub-label">From</span>
+            <input type="number" id="rev-range-min" min="0" max="99" value="0" placeholder="00" class="range-num-input mono">
+            <span class="range-sub-label">To</span>
+            <input type="number" id="rev-range-max" min="0" max="99" value="99" placeholder="99" class="range-num-input mono">
+            <button class="btn btn-primary" id="rev-range-apply" style="padding:0.25rem 0.65rem; font-size:0.75rem;">Set Range</button>
+          </div>
+          <div class="range-presets-group">
+            <span class="range-sub-label">Presets:</span>
+            <button class="range-preset-pill active" data-target="rev" data-min="0" data-max="99">All (00–99)</button>
+            <button class="range-preset-pill" data-target="rev" data-min="0" data-max="10">0–10</button>
+            <button class="range-preset-pill" data-target="rev" data-min="10" data-max="20">10–20</button>
+            <button class="range-preset-pill" data-target="rev" data-min="30" data-max="70">30–70</button>
+            <button class="range-preset-pill" data-target="rev" data-min="0" data-max="19">00–19</button>
+            <button class="range-preset-pill" data-target="rev" data-min="20" data-max="39">20–39</button>
+            <button class="range-preset-pill" data-target="rev" data-min="40" data-max="59">40–59</button>
+            <button class="range-preset-pill" data-target="rev" data-min="60" data-max="79">60–79</button>
+            <button class="range-preset-pill" data-target="rev" data-min="80" data-max="99">80–99</button>
+          </div>
+          <div class="range-status-badge">
+            Scope: <strong id="rev-range-status-display">00–99 (100 cards)</strong>
+          </div>
+        </div>
+
         <span class="pao-pill" id="rev-type-pill" style="margin-bottom:0.75rem;">PERSON</span>
         <h2 style="font-size:2rem; font-weight:800; margin-bottom:1.5rem;" id="rev-cue-text">---</h2>
         <div style="display:flex; justify-content:center; gap:0.5rem; margin-bottom:1.5rem;">
@@ -1086,6 +1254,33 @@
 
     <div id="panel-decode" class="panel">
       <div class="card-shell" style="max-width:740px; text-align:left;">
+        <!-- 6-Digit Decode Range Selector Bar -->
+        <div class="range-control-bar">
+          <div class="range-inputs-group">
+            <span class="range-title-label">🎯 Card Range:</span>
+            <span class="range-sub-label">From</span>
+            <input type="number" id="dec-range-min" min="0" max="99" value="0" placeholder="00" class="range-num-input mono">
+            <span class="range-sub-label">To</span>
+            <input type="number" id="dec-range-max" min="0" max="99" value="99" placeholder="99" class="range-num-input mono">
+            <button class="btn btn-primary" id="dec-range-apply" style="padding:0.25rem 0.65rem; font-size:0.75rem;">Set Range</button>
+          </div>
+          <div class="range-presets-group">
+            <span class="range-sub-label">Presets:</span>
+            <button class="range-preset-pill active" data-target="dec" data-min="0" data-max="99">All (00–99)</button>
+            <button class="range-preset-pill" data-target="dec" data-min="0" data-max="10">0–10</button>
+            <button class="range-preset-pill" data-target="dec" data-min="10" data-max="20">10–20</button>
+            <button class="range-preset-pill" data-target="dec" data-min="30" data-max="70">30–70</button>
+            <button class="range-preset-pill" data-target="dec" data-min="0" data-max="19">00–19</button>
+            <button class="range-preset-pill" data-target="dec" data-min="20" data-max="39">20–39</button>
+            <button class="range-preset-pill" data-target="dec" data-min="40" data-max="59">40–59</button>
+            <button class="range-preset-pill" data-target="dec" data-min="60" data-max="79">60–79</button>
+            <button class="range-preset-pill" data-target="dec" data-min="80" data-max="99">80–99</button>
+          </div>
+          <div class="range-status-badge">
+            Scope: <strong id="dec-range-status-display">00–99 (100 cards)</strong>
+          </div>
+        </div>
+
         <div style="text-align:center; margin-bottom:1.25rem;">
           <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">6-Digit Decoding Challenge</span>
           <div class="mono" style="font-size:2.8rem; font-weight:900; letter-spacing:4px; color:var(--accent);" id="dec-chunk-disp">------</div>
@@ -1112,6 +1307,33 @@
 
     <div id="panel-storyboard" class="panel">
       <div class="card-shell" style="max-width:920px;">
+        <!-- Storyboard Range Selector Bar -->
+        <div class="range-control-bar">
+          <div class="range-inputs-group">
+            <span class="range-title-label">🎯 Card Range:</span>
+            <span class="range-sub-label">From</span>
+            <input type="number" id="sb-range-min" min="0" max="99" value="0" placeholder="00" class="range-num-input mono">
+            <span class="range-sub-label">To</span>
+            <input type="number" id="sb-range-max" min="0" max="99" value="99" placeholder="99" class="range-num-input mono">
+            <button class="btn btn-primary" id="sb-range-apply" style="padding:0.25rem 0.65rem; font-size:0.75rem;">Set Range</button>
+          </div>
+          <div class="range-presets-group">
+            <span class="range-sub-label">Presets:</span>
+            <button class="range-preset-pill active" data-target="sb" data-min="0" data-max="99">All (00–99)</button>
+            <button class="range-preset-pill" data-target="sb" data-min="0" data-max="10">0–10</button>
+            <button class="range-preset-pill" data-target="sb" data-min="10" data-max="20">10–20</button>
+            <button class="range-preset-pill" data-target="sb" data-min="30" data-max="70">30–70</button>
+            <button class="range-preset-pill" data-target="sb" data-min="0" data-max="19">00–19</button>
+            <button class="range-preset-pill" data-target="sb" data-min="20" data-max="39">20–39</button>
+            <button class="range-preset-pill" data-target="sb" data-min="40" data-max="59">40–59</button>
+            <button class="range-preset-pill" data-target="sb" data-min="60" data-max="79">60–79</button>
+            <button class="range-preset-pill" data-target="sb" data-min="80" data-max="99">80–99</button>
+          </div>
+          <div class="range-status-badge">
+            Scope: <strong id="sb-range-status-display">00–99 (100 cards)</strong>
+          </div>
+        </div>
+
         <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">6-Digit Synthesis Storyboard</div>
         <div class="mono" style="font-size:3rem; font-weight:900; letter-spacing:5px; color:var(--accent); margin:0.35rem 0 1rem 0;" id="sb-chunk-disp">-- - -- - --</div>
 
@@ -1154,6 +1376,33 @@
     <div id="panel-metronome" class="panel">
       <div class="card-shell" style="max-width:700px;">
         <h2 style="color:var(--accent); margin-bottom:0.75rem;">Speed Flash Metronome</h2>
+        <!-- Metronome Range Selector Bar -->
+        <div class="range-control-bar">
+          <div class="range-inputs-group">
+            <span class="range-title-label">🎯 Card Range:</span>
+            <span class="range-sub-label">From</span>
+            <input type="number" id="metro-range-min" min="0" max="99" value="0" placeholder="00" class="range-num-input mono">
+            <span class="range-sub-label">To</span>
+            <input type="number" id="metro-range-max" min="0" max="99" value="99" placeholder="99" class="range-num-input mono">
+            <button class="btn btn-primary" id="metro-range-apply" style="padding:0.25rem 0.65rem; font-size:0.75rem;">Set Range</button>
+          </div>
+          <div class="range-presets-group">
+            <span class="range-sub-label">Presets:</span>
+            <button class="range-preset-pill active" data-target="metro" data-min="0" data-max="99">All (00–99)</button>
+            <button class="range-preset-pill" data-target="metro" data-min="0" data-max="10">0–10</button>
+            <button class="range-preset-pill" data-target="metro" data-min="10" data-max="20">10–20</button>
+            <button class="range-preset-pill" data-target="metro" data-min="30" data-max="70">30–70</button>
+            <button class="range-preset-pill" data-target="metro" data-min="0" data-max="19">00–19</button>
+            <button class="range-preset-pill" data-target="metro" data-min="20" data-max="39">20–39</button>
+            <button class="range-preset-pill" data-target="metro" data-min="40" data-max="59">40–59</button>
+            <button class="range-preset-pill" data-target="metro" data-min="60" data-max="79">60–79</button>
+            <button class="range-preset-pill" data-target="metro" data-min="80" data-max="99">80–99</button>
+          </div>
+          <div class="range-status-badge">
+            Scope: <strong id="metro-range-status-display">00–99 (100 cards)</strong>
+          </div>
+        </div>
+
         <div style="display:flex; justify-content:center; gap:1.25rem; margin-bottom:1.5rem; flex-wrap:wrap;">
           <div>
             <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Seconds Per Card:</label>
@@ -1177,6 +1426,33 @@
       <div class="card-shell" style="max-width:920px;" id="palace-setup-box">
         <h2 style="color:var(--accent); margin-bottom:0.5rem;">Spatial Loci Palace Route</h2>
         <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.25rem;">Plot sequential 6-digit chunk stations along an architectural mental journey.</p>
+        <!-- Palace Range Selector Bar -->
+        <div class="range-control-bar">
+          <div class="range-inputs-group">
+            <span class="range-title-label">🎯 Card Range:</span>
+            <span class="range-sub-label">From</span>
+            <input type="number" id="palace-range-min" min="0" max="99" value="0" placeholder="00" class="range-num-input mono">
+            <span class="range-sub-label">To</span>
+            <input type="number" id="palace-range-max" min="0" max="99" value="99" placeholder="99" class="range-num-input mono">
+            <button class="btn btn-primary" id="palace-range-apply" style="padding:0.25rem 0.65rem; font-size:0.75rem;">Set Range</button>
+          </div>
+          <div class="range-presets-group">
+            <span class="range-sub-label">Presets:</span>
+            <button class="range-preset-pill active" data-target="palace" data-min="0" data-max="99">All (00–99)</button>
+            <button class="range-preset-pill" data-target="palace" data-min="0" data-max="10">0–10</button>
+            <button class="range-preset-pill" data-target="palace" data-min="10" data-max="20">10–20</button>
+            <button class="range-preset-pill" data-target="palace" data-min="30" data-max="70">30–70</button>
+            <button class="range-preset-pill" data-target="palace" data-min="0" data-max="19">00–19</button>
+            <button class="range-preset-pill" data-target="palace" data-min="20" data-max="39">20–39</button>
+            <button class="range-preset-pill" data-target="palace" data-min="40" data-max="59">40–59</button>
+            <button class="range-preset-pill" data-target="palace" data-min="60" data-max="79">60–79</button>
+            <button class="range-preset-pill" data-target="palace" data-min="80" data-max="99">80–99</button>
+          </div>
+          <div class="range-status-badge">
+            Scope: <strong id="palace-range-status-display">00–99 (100 cards)</strong>
+          </div>
+        </div>
+
         <div style="margin-bottom:1.25rem;">
           <label style="font-size:0.8rem; color:var(--text-muted);">Number of Stations:</label>
           <input type="number" id="palace-in-count" value="5" min="2" max="12" style="width:80px; margin-left:0.5rem; text-align:center;">
@@ -1504,8 +1780,8 @@
     }
 
     function initDeck() {
-      const CURRENT_VERSION = "pao_deck_v21";
-      const stored = localStorage.getItem(CURRENT_VERSION) || localStorage.getItem("pao_deck_v20");
+      const CURRENT_VERSION = "pao_deck_v22";
+      const stored = localStorage.getItem(CURRENT_VERSION) || localStorage.getItem("pao_deck_v21");
       if (stored) {
         try {
           deck = JSON.parse(stored);
@@ -1546,7 +1822,7 @@
     }
 
     function saveDeck() {
-      localStorage.setItem("pao_deck_v21", JSON.stringify(deck));
+      localStorage.setItem("pao_deck_v22", JSON.stringify(deck));
     }
 
     let useLavaRng = localStorage.getItem("pao_use_lava_rng") === "true";
@@ -2311,29 +2587,119 @@
       document.getElementById("lightbox-modal").classList.add("active");
     }
 
+    /* Range Utilities */
+    function getCardRangeKeys(minVal = 0, maxVal = 99) {
+      let low = Math.max(0, Math.min(99, parseInt(minVal, 10) || 0));
+      let high = Math.max(0, Math.min(99, parseInt(maxVal, 10) || 99));
+      if (low > high) [low, high] = [high, low];
+      const keys = [];
+      for (let i = low; i <= high; i++) {
+        const k = String(i).padStart(2, "0");
+        if (deck[k]) keys.push(k);
+      }
+      return keys.length > 0 ? keys : Object.keys(deck);
+    }
+
+    function updateRangeBadgeDisplay(target, min, max) {
+      let low = Math.max(0, Math.min(99, parseInt(min, 10) || 0));
+      let high = Math.max(0, Math.min(99, parseInt(max, 10) || 99));
+      if (low > high) [low, high] = [high, low];
+      const count = high - low + 1;
+      const badgeId = target === 'gauntlet' ? 'gauntlet-range-status-display' : `${target}-range-status-display`;
+      const badgeEl = document.getElementById(badgeId);
+      if (badgeEl) {
+        badgeEl.innerText = `${String(low).padStart(2, '0')}–${String(high).padStart(2, '0')} (${count} cards)`;
+      }
+    }
+
+    function setActiveRangePreset(target, min, max) {
+      document.querySelectorAll(`.range-preset-pill[data-target="${target}"]`).forEach(btn => {
+        const bMin = parseInt(btn.dataset.min, 10);
+        const bMax = parseInt(btn.dataset.max, 10);
+        btn.classList.toggle("active", bMin === min && bMax === max);
+      });
+      updateRangeBadgeDisplay(target, min, max);
+    }
+
     let gauntletIdx = 0;
+    let gauntletStartIdx = 0;
+    let gauntletEndIdx = 99;
     let gauntletCheckpoint = 0;
     let gauntletRevealed = false;
 
+    function setGauntletRange(startVal, endVal) {
+      let s = Math.max(0, Math.min(99, parseInt(startVal, 10) || 0));
+      let e = Math.max(0, Math.min(99, parseInt(endVal, 10) || 99));
+      if (s > e) [s, e] = [e, s];
+      gauntletStartIdx = s;
+      gauntletEndIdx = e;
+      gauntletIdx = s;
+      gauntletCheckpoint = s;
+
+      const sIn = document.getElementById("gauntlet-start-input");
+      const eIn = document.getElementById("gauntlet-end-input");
+      if (sIn) sIn.value = s;
+      if (eIn) eIn.value = e;
+
+      const pinDisp = document.getElementById("gauntlet-pin-display");
+      if (pinDisp) pinDisp.innerText = String(s).padStart(2, "0");
+
+      setActiveRangePreset("gauntlet", s, e);
+      updateGauntletUI();
+      showToast(`Gauntlet range set to [${String(s).padStart(2, "0")}–${String(e).padStart(2, "0")}] (${e - s + 1} cards)!`);
+    }
+
+    let gauntletIdx = 0;
+    let gauntletStartIdx = 0;
+    let gauntletEndIdx = 99;
+    let gauntletCheckpoint = 0;
+    let gauntletRevealed = false;
+
+    function setGauntletRange(startVal, endVal) {
+      let s = Math.max(0, Math.min(99, parseInt(startVal, 10) || 0));
+      let e = Math.max(0, Math.min(99, parseInt(endVal, 10) || 99));
+      if (s > e) [s, e] = [e, s];
+      gauntletStartIdx = s;
+      gauntletEndIdx = e;
+      gauntletIdx = s;
+      gauntletCheckpoint = s;
+
+      const sIn = document.getElementById("gauntlet-start-input");
+      const eIn = document.getElementById("gauntlet-end-input");
+      if (sIn) sIn.value = s;
+      if (eIn) eIn.value = e;
+
+      const pinDisp = document.getElementById("gauntlet-pin-display");
+      if (pinDisp) pinDisp.innerText = String(s).padStart(2, "0");
+
+      setActiveRangePreset("gauntlet", s, e);
+      updateGauntletUI();
+      showToast(`Gauntlet range set to [${String(s).padStart(2, "0")}–${String(e).padStart(2, "0")}]!`);
+    }
+
     function jumpGauntletTo(cardNum) {
       let val = parseInt(cardNum, 10);
-      if (isNaN(val)) val = 0;
-      val = Math.max(0, Math.min(99, val));
+      if (isNaN(val)) val = gauntletStartIdx;
+      val = Math.max(gauntletStartIdx, Math.min(gauntletEndIdx, val));
       gauntletIdx = val;
       gauntletCheckpoint = val;
       const pinDisp = document.getElementById("gauntlet-pin-display");
       if (pinDisp) pinDisp.innerText = String(val).padStart(2, "0");
-      const inEl = document.getElementById("gauntlet-start-input");
-      if (inEl) inEl.value = val;
       updateGauntletUI();
-      showToast(`Started Gauntlet at Card [${String(val).padStart(2, "0")}]!`);
+      showToast(`Jumped to Card [${String(val).padStart(2, "0")}]!`);
     }
 
     function getActiveCheckpoint(idx, policy) {
-      if (policy === "10") return Math.floor(idx / 10) * 10;
-      if (policy === "25") return Math.floor(idx / 25) * 25;
-      if (policy === "manual") return gauntletCheckpoint;
-      return 0;
+      if (policy === "10") {
+        const cp = Math.floor(idx / 10) * 10;
+        return Math.max(gauntletStartIdx, cp);
+      }
+      if (policy === "25") {
+        const cp = Math.floor(idx / 25) * 25;
+        return Math.max(gauntletStartIdx, cp);
+      }
+      if (policy === "manual") return Math.max(gauntletStartIdx, gauntletCheckpoint);
+      return gauntletStartIdx;
     }
 
     function updateGauntletUI() {
@@ -2341,18 +2707,16 @@
       const card = deck[key] || DEFAULT_MASTER_DECK[key];
       gauntletRevealed = false;
 
-      const inEl = document.getElementById("gauntlet-start-input");
-      if (inEl && document.activeElement !== inEl) {
-        inEl.value = gauntletIdx;
-      }
-
-      document.getElementById("gauntlet-header-num").innerText = `Card [${key}]`;
+      document.getElementById("gauntlet-header-num").innerText = `Card [${key}] (Range ${String(gauntletStartIdx).padStart(2,"0")}–${String(gauntletEndIdx).padStart(2,"0")})`;
       document.getElementById("gauntlet-num-disp").innerText = key;
       document.getElementById("gauntlet-init-disp").innerText = card.initials;
       document.getElementById("gauntlet-p-code").innerText = `[${key}]`;
       document.getElementById("gauntlet-o-code").innerText = `[${key}]`;
 
-      document.getElementById("gauntlet-progress-bar").style.width = `${((gauntletIdx + 1) / 100) * 100}%`;
+      const totalCardsInRange = Math.max(1, gauntletEndIdx - gauntletStartIdx + 1);
+      const currentPosInRange = gauntletIdx - gauntletStartIdx + 1;
+      const progressPct = Math.max(1, Math.min(100, (currentPosInRange / totalCardsInRange) * 100));
+      document.getElementById("gauntlet-progress-bar").style.width = `${progressPct}%`;
 
       document.getElementById("gauntlet-p-name").innerText = "???";
       document.getElementById("gauntlet-a-name").innerText = "???";
@@ -2397,11 +2761,11 @@
 
     document.getElementById("gauntlet-btn-pass").onclick = () => {
       playSuccessSound();
-      if (gauntletIdx < 99) {
+      if (gauntletIdx < gauntletEndIdx) {
         gauntletIdx++;
         updateGauntletUI();
       } else {
-        showToast("🏆 Congratulations! You have conquered all 100 cards in the Gauntlet!");
+        showToast(`🏆 Congratulations! You conquered all cards in range [${String(gauntletStartIdx).padStart(2, "0")}–${String(gauntletEndIdx).padStart(2, "0")}]!`);
       }
     };
 
@@ -2421,21 +2785,17 @@
     };
 
     document.getElementById("gauntlet-start-btn").onclick = () => {
-      jumpGauntletTo(document.getElementById("gauntlet-start-input").value);
+      const s = document.getElementById("gauntlet-start-input").value;
+      const e = document.getElementById("gauntlet-end-input").value;
+      setGauntletRange(s, e);
     };
-
-    document.getElementById("gauntlet-start-input").addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        jumpGauntletTo(document.getElementById("gauntlet-start-input").value);
-      }
-    });
 
     let fcCurrentNum = "00";
     let fcRevealed = false;
 
-    function getWeightedRandomCard() {
-      const keys = Object.keys(deck);
-      const weights = keys.map(k => Math.max(0.1, deck[k].weight || 1.0));
+    function getWeightedRandomCard(allowedKeys = null) {
+      const keys = (allowedKeys && allowedKeys.length > 0) ? allowedKeys : Object.keys(deck);
+      const weights = keys.map(k => Math.max(0.1, deck[k]?.weight || 1.0));
       const totalWeight = weights.reduce((acc, w) => acc + w, 0);
       let rand = getNextRandom() * totalWeight;
       for (let i = 0; i < keys.length; i++) {
@@ -2446,7 +2806,11 @@
     }
 
     function nextFlashcard() {
-      fcCurrentNum = getWeightedRandomCard();
+      const minVal = document.getElementById("fc-range-min")?.value || 0;
+      const maxVal = document.getElementById("fc-range-max")?.value || 99;
+      const allowed = getCardRangeKeys(minVal, maxVal);
+
+      fcCurrentNum = getWeightedRandomCard(allowed);
       fcRevealed = false;
       const card = deck[fcCurrentNum];
 
@@ -2472,6 +2836,14 @@
         aTag.onclick = () => toggleCardActionMode(fcCurrentNum, "fc");
       }
     }
+
+    document.getElementById("fc-range-apply")?.addEventListener("click", () => {
+      const min = parseInt(document.getElementById("fc-range-min").value, 10) || 0;
+      const max = parseInt(document.getElementById("fc-range-max").value, 10) || 99;
+      setActiveRangePreset("fc", min, max);
+      nextFlashcard();
+      showToast(`Flashcards set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+    });
 
     document.getElementById("fc-btn-reveal").onclick = () => {
       if (fcRevealed) return;
@@ -2517,7 +2889,11 @@
     let revCurrentType = "person";
 
     function nextReverseDrill() {
-      revCurrentNum = getWeightedRandomCard();
+      const minVal = document.getElementById("rev-range-min")?.value || 0;
+      const maxVal = document.getElementById("rev-range-max")?.value || 99;
+      const allowed = getCardRangeKeys(minVal, maxVal);
+
+      revCurrentNum = getWeightedRandomCard(allowed);
       const card = deck[revCurrentNum];
       const types = ["person", "action", "object"];
       revCurrentType = types[Math.floor(getNextRandom() * types.length)];
@@ -2532,6 +2908,14 @@
       document.getElementById("rev-story-banner").style.display = "none";
       document.getElementById("rev-input").focus();
     }
+
+    document.getElementById("rev-range-apply")?.addEventListener("click", () => {
+      const min = parseInt(document.getElementById("rev-range-min").value, 10) || 0;
+      const max = parseInt(document.getElementById("rev-range-max").value, 10) || 99;
+      setActiveRangePreset("rev", min, max);
+      nextReverseDrill();
+      showToast(`Reverse drill set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+    });
 
     document.getElementById("rev-btn-check").onclick = () => {
       const val = document.getElementById("rev-input").value.trim().padStart(2, "0");
@@ -2562,7 +2946,10 @@
     let decChunk = ["00", "00", "00"];
 
     function nextDecodeDrill() {
-      const keys = Object.keys(deck);
+      const minVal = document.getElementById("dec-range-min")?.value || 0;
+      const maxVal = document.getElementById("dec-range-max")?.value || 99;
+      const keys = getCardRangeKeys(minVal, maxVal);
+
       decChunk = [
         keys[Math.floor(getNextRandom() * keys.length)],
         keys[Math.floor(getNextRandom() * keys.length)],
@@ -2579,6 +2966,14 @@
       document.getElementById("dec-result-box").style.display = "none";
       document.getElementById("dec-story-banner").style.display = "none";
     }
+
+    document.getElementById("dec-range-apply")?.addEventListener("click", () => {
+      const min = parseInt(document.getElementById("dec-range-min").value, 10) || 0;
+      const max = parseInt(document.getElementById("dec-range-max").value, 10) || 99;
+      setActiveRangePreset("dec", min, max);
+      nextDecodeDrill();
+      showToast(`Decode drill set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+    });
 
     function fuzzyMatchText(userText, targetText) {
       const u = (userText || "").toLowerCase().trim();
@@ -2623,7 +3018,10 @@
     let sbChunk = ["00", "00", "00"];
 
     function nextStoryboardChunk() {
-      const keys = Object.keys(deck);
+      const minVal = document.getElementById("sb-range-min")?.value || 0;
+      const maxVal = document.getElementById("sb-range-max")?.value || 99;
+      const keys = getCardRangeKeys(minVal, maxVal);
+
       sbChunk = [
         keys[Math.floor(getNextRandom() * keys.length)],
         keys[Math.floor(getNextRandom() * keys.length)],
@@ -2652,6 +3050,14 @@
         aTag.onclick = () => toggleCardActionMode(sbChunk[1], "sb");
       }
     }
+
+    document.getElementById("sb-range-apply")?.addEventListener("click", () => {
+      const min = parseInt(document.getElementById("sb-range-min").value, 10) || 0;
+      const max = parseInt(document.getElementById("sb-range-max").value, 10) || 99;
+      setActiveRangePreset("sb", min, max);
+      nextStoryboardChunk();
+      showToast(`Storyboard set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+    });
 
     document.getElementById("sb-btn-reveal").onclick = () => {
       const cP = deck[sbChunk[0]];
@@ -2683,6 +3089,9 @@
     document.getElementById("metro-btn-start").onclick = () => {
       const paceSec = parseFloat(document.getElementById("metro-in-pace").value) || 2.5;
       metroTotalCount = parseInt(document.getElementById("metro-in-qty").value) || 15;
+      const minVal = document.getElementById("metro-range-min")?.value || 0;
+      const maxVal = document.getElementById("metro-range-max")?.value || 99;
+      const keys = getCardRangeKeys(minVal, maxVal);
       metroCurrentIdx = 0;
 
       if (metroTimer) clearInterval(metroTimer);
@@ -2698,7 +3107,6 @@
         }
 
         metroCurrentIdx++;
-        const keys = Object.keys(deck);
         const cardKey = keys[Math.floor(getNextRandom() * keys.length)];
         const card = deck[cardKey];
 
@@ -2726,7 +3134,9 @@
 
     document.getElementById("palace-btn-build").onclick = () => {
       const count = parseInt(document.getElementById("palace-in-count").value) || 5;
-      const keys = Object.keys(deck);
+      const minVal = document.getElementById("palace-range-min")?.value || 0;
+      const maxVal = document.getElementById("palace-range-max")?.value || 99;
+      const keys = getCardRangeKeys(minVal, maxVal);
       palaceStations = [];
 
       const listEl = document.getElementById("palace-stations-list");
@@ -3118,6 +3528,98 @@
         finderActiveSource = btn.dataset.src;
         document.getElementById("finder-btn-search").click();
       };
+    });
+
+    /* Global delegation for all Range Preset Pills */
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".range-preset-pill");
+      if (!btn) return;
+      const target = btn.dataset.target;
+      const min = parseInt(btn.dataset.min, 10);
+      const max = parseInt(btn.dataset.max, 10);
+
+      setActiveRangePreset(target, min, max);
+
+      if (target === "gauntlet") {
+        setGauntletRange(min, max);
+      } else if (target === "fc") {
+        const minEl = document.getElementById("fc-range-min");
+        const maxEl = document.getElementById("fc-range-max");
+        if (minEl) minEl.value = min;
+        if (maxEl) maxEl.value = max;
+        nextFlashcard();
+        showToast(`Flashcards set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+      } else if (target === "rev") {
+        const minEl = document.getElementById("rev-range-min");
+        const maxEl = document.getElementById("rev-range-max");
+        if (minEl) minEl.value = min;
+        if (maxEl) maxEl.value = max;
+        nextReverseDrill();
+        showToast(`Reverse drill set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+      } else if (target === "dec") {
+        const minEl = document.getElementById("dec-range-min");
+        const maxEl = document.getElementById("dec-range-max");
+        if (minEl) minEl.value = min;
+        if (maxEl) maxEl.value = max;
+        nextDecodeDrill();
+        showToast(`Decode drill set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+      } else if (target === "sb") {
+        const minEl = document.getElementById("sb-range-min");
+        const maxEl = document.getElementById("sb-range-max");
+        if (minEl) minEl.value = min;
+        if (maxEl) maxEl.value = max;
+        nextStoryboardChunk();
+        showToast(`Storyboard set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+      } else if (target === "metro") {
+        const minEl = document.getElementById("metro-range-min");
+        const maxEl = document.getElementById("metro-range-max");
+        if (minEl) minEl.value = min;
+        if (maxEl) maxEl.value = max;
+        showToast(`Metronome set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+      } else if (target === "palace") {
+        const minEl = document.getElementById("palace-range-min");
+        const maxEl = document.getElementById("palace-range-max");
+        if (minEl) minEl.value = min;
+        if (maxEl) maxEl.value = max;
+        showToast(`Loci Palace set to range [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+      }
+    });
+
+    document.getElementById("palace-range-apply")?.addEventListener("click", () => {
+      const min = parseInt(document.getElementById("palace-range-min").value, 10) || 0;
+      const max = parseInt(document.getElementById("palace-range-max").value, 10) || 99;
+      setActiveRangePreset("palace", min, max);
+      showToast(`Palace range set to [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+    });
+
+    document.getElementById("metro-range-apply")?.addEventListener("click", () => {
+      const min = parseInt(document.getElementById("metro-range-min").value, 10) || 0;
+      const max = parseInt(document.getElementById("metro-range-max").value, 10) || 99;
+      setActiveRangePreset("metro", min, max);
+      showToast(`Metronome range set to [${String(min).padStart(2,'0')}–${String(max).padStart(2,'0')}]!`);
+    });
+
+    // Enter key shortcuts for range inputs
+    [
+      { min: "gauntlet-start-input", max: "gauntlet-end-input", btn: "gauntlet-start-btn" },
+      { min: "fc-range-min", max: "fc-range-max", btn: "fc-range-apply" },
+      { min: "rev-range-min", max: "rev-range-max", btn: "rev-range-apply" },
+      { min: "dec-range-min", max: "dec-range-max", btn: "dec-range-apply" },
+      { min: "sb-range-min", max: "sb-range-max", btn: "sb-range-apply" },
+      { min: "metro-range-min", max: "metro-range-max", btn: "metro-range-apply" },
+      { min: "palace-range-min", max: "palace-range-max", btn: "palace-range-apply" }
+    ].forEach(cfg => {
+      [cfg.min, cfg.max].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              const b = document.getElementById(cfg.btn);
+              if (b) b.click();
+            }
+          });
+        }
+      });
     });
 
     document.getElementById("finder-btn-search").onclick = async () => {
